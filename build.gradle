@@ -8,4 +8,6 @@ dependencies {
     compile 'org.seleniumhq.selenium:selenium-java:2.35.0'
     compile 'com.google.code.findbugs:jsr305:2.0.2'
     compile 'com.google.guava:guava:14.0.1'
+
+    testCompile 'org.testng:testng:6.8.7'
 }
