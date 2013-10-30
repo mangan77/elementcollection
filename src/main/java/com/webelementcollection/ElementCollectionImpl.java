@@ -5,12 +5,12 @@ import com.google.common.collect.Lists;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static com.webelementcollection.SelectFunction.*;
 
 class ElementCollectionImpl implements ElementCollection {
 
@@ -79,32 +79,17 @@ class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public ElementCollection val(final String value) {
-        return val(value, new SelectFunction() {
-            @Override
-            void doSelect(final Select select) {
-                select.selectByValue(value);
-            }
-        });
+        return val(value, new SelectByValue(value));
     }
 
     @Override
     public ElementCollection valByIndex(final int index) {
-        return val(String.valueOf(index), new SelectFunction() {
-            @Override
-            void doSelect(final Select select) {
-                select.selectByIndex(index);
-            }
-        });
+        return val(String.valueOf(index), new SelectByIndex(index));
     }
 
     @Override
     public ElementCollection valByVisibleText(final String text) {
-        return val(text, new SelectFunction() {
-            @Override
-            void doSelect(final Select select) {
-                select.selectByVisibleText(text);
-            }
-        });
+        return val(text, new SelectByVisibleText(text));
     }
 
     private ElementCollection val(final String text, final SelectFunction selectFunction) {

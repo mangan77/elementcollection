@@ -23,4 +23,46 @@ abstract class SelectFunction implements Function<WebElement, Boolean> {
 
     abstract void doSelect(final Select select);
 
+    public static class SelectByValue extends SelectFunction {
+
+        private final String value;
+
+        public SelectByValue(String value) {
+            this.value = value;
+        }
+
+        @Override
+        void doSelect(final Select select) {
+            select.selectByValue(value);
+        }
+    }
+
+    public static class SelectByIndex extends SelectFunction {
+        private final int index;
+
+        public SelectByIndex(int index) {
+            this.index = index;
+        }
+
+        @Override
+        void doSelect(final Select select) {
+            select.selectByIndex(index);
+        }
+
+    }
+
+    public static class SelectByVisibleText extends SelectFunction {
+        private final String text;
+
+        public SelectByVisibleText(String text) {
+            this.text = text;
+        }
+
+        @Override
+        void doSelect(final Select select) {
+            select.selectByVisibleText(text);
+        }
+
+    }
+
 }
