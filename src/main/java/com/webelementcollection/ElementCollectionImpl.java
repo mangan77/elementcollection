@@ -2,6 +2,10 @@ package com.webelementcollection;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.webelementcollection.functions.select.SelectByIndex;
+import com.webelementcollection.functions.select.SelectByValue;
+import com.webelementcollection.functions.select.SelectByVisibleText;
+import com.webelementcollection.functions.select.SelectFunction;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,7 +16,6 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static com.webelementcollection.SelectFunction.*;
 
 @ParametersAreNonnullByDefault
 class ElementCollectionImpl implements ElementCollection {
@@ -113,19 +116,35 @@ class ElementCollectionImpl implements ElementCollection {
     }
 
     private boolean isSelectBox(final WebElement element) {
-        return element.getTagName() != null && "select".equals(element.getTagName().toLowerCase());
+        return isTag(element, "select");
+    }
+
+    private boolean isTag(WebElement element, String tagName) {
+        return hasTagName(element) && tagNameIs(element, tagName);
+    }
+
+    private boolean tagNameIs(WebElement element, String tagName) {
+        return tagName.toLowerCase().equals(element.getTagName().toLowerCase());
+    }
+
+    private boolean hasTagName(WebElement element) {
+        return element.getTagName() != null;
     }
 
     private boolean isCheckbox(final WebElement element) {
-        return element.getTagName() != null &&
-                "input".equals(element.getTagName().toLowerCase()) &&
-                "checkbox".equals(element.getAttribute("type"));
+        return isInputOfType(element, "checkbox");
+    }
+
+    private boolean isInputOfType(WebElement element, String type) {
+        return isTag(element, "input") && typeIs(element, type);
+    }
+
+    private boolean typeIs(WebElement element, String type) {
+        return type.equals(element.getAttribute("type"));
     }
 
     private boolean isRadioButton(final WebElement element) {
-        return element.getTagName() != null &&
-                "input".equals(element.getTagName().toLowerCase()) &&
-                "radio".equals(element.getAttribute("type"));
+        return isInputOfType(element, "radio");
     }
 
     @Override
@@ -198,9 +217,17 @@ class ElementCollectionImpl implements ElementCollection {
     }
 
     private void setValue(WebElement element, boolean value) {
-        if (element.isSelected() && !value || !element.isSelected() && value) {
+        if (isSelectedButShouldBeDeselected(element, value) || isNotSelectedButShouldBeSelected(element, value)) {
             element.click();
         }
+    }
+
+    private boolean isNotSelectedButShouldBeSelected(WebElement element, boolean value) {
+        return !element.isSelected() && value;
+    }
+
+    private boolean isSelectedButShouldBeDeselected(WebElement element, boolean value) {
+        return element.isSelected() && !value;
     }
 
 }

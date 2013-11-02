@@ -112,12 +112,6 @@ public class ElementCollectionImplTest {
         assertEquals(elementCollection.last().attr("id"), "two");
     }
 
-
-//    public void testLast() throws Exception {
-//
-//    }
-//
-
     public void Getting_Value_From_Empty_Collection_Should_Return_Null() {
         final ElementCollectionImpl elementCollection = new ElementCollectionImpl(mockWebDriver());
 
