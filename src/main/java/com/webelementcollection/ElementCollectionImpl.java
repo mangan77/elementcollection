@@ -14,8 +14,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Preconditions.*;
 
 @ParametersAreNonnullByDefault
 class ElementCollectionImpl implements ElementCollection {
@@ -217,9 +216,16 @@ class ElementCollectionImpl implements ElementCollection {
     }
 
     private void setValue(WebElement element, boolean value) {
+        checkArgument(isCheckbox(element) || isRadioButton(element) || isSelectOption(element),
+                "Boolean values can only be set to checkboxes, radio buttons and select options");
+
         if (isSelectedButShouldBeDeselected(element, value) || isNotSelectedButShouldBeSelected(element, value)) {
             element.click();
         }
+    }
+
+    private boolean isSelectOption(WebElement element) {
+        return isTag(element, "option");
     }
 
     private boolean isNotSelectedButShouldBeSelected(WebElement element, boolean value) {

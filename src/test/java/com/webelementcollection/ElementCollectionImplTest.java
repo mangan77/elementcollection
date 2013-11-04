@@ -129,7 +129,7 @@ public class ElementCollectionImplTest {
     }
 
     public void Setting_Value_True_To_An_Unchecked_Checkable_Should_Make_It_Checked() {
-        final WebElement webElementOne = new WebElementMock().asCheckable();
+        final WebElement webElementOne = new WebElementMock().asCheckable().withTagName("input").withAttribute("type", "checkbox").asCheckable();
         final ElementCollectionImpl elementCollection = new ElementCollectionImpl(mockWebDriver(), webElementOne);
 
         elementCollection.val(true);
@@ -137,7 +137,11 @@ public class ElementCollectionImplTest {
     }
 
     public void Setting_Value_True_To_An_Already_Checked_Checkable_Should_Leave_It_Checked() {
-        final WebElement webElement = new WebElementMock().setSelected(true);
+        final WebElement webElement = new WebElementMock()
+                .asCheckable()
+                .withTagName("input")
+                .withAttribute("type", "radio")
+                .setSelected(true);
 
         final ElementCollectionImpl elementCollection = new ElementCollectionImpl(mockWebDriver(), webElement);
 
@@ -145,17 +149,36 @@ public class ElementCollectionImplTest {
         assertTrue(webElement.isSelected());
     }
 
-    public void testSettingValueFalseToACheckedCheckboxShouldMakeItUnchecked() {
-        assertTrue(false);
+    public void Setting_Value_False_To_A_Checked_Checkbox_Should_Make_It_Unchecked() {
+        final WebElement webElement = new WebElementMock().withTagName("option").setSelected(true).asCheckable();
+
+        final ElementCollectionImpl elementCollection = new ElementCollectionImpl(mockWebDriver(), webElement);
+
+        elementCollection.val(false);
+        assertFalse(webElement.isSelected());
     }
 
-    public void testSettingValueFalseToAnAlreadyUncheckedCheckboxShouldLeaveItUnchecked() {
-        assertTrue(false);
+    public void Setting_Value_False_To_An_Already_Unchecked_Checkbox_Should_Leave_It_Unchecked() {
+        final WebElement webElement = new WebElementMock()
+                .asCheckable()
+                .withTagName("input")
+                .withAttribute("type", "checkbox")
+                .setSelected(false);
+
+        final ElementCollectionImpl elementCollection = new ElementCollectionImpl(mockWebDriver(), webElement);
+
+        elementCollection.val(false);
+        assertFalse(webElement.isSelected());
     }
 
-    @Test
-    public void testCheckingNonCheckableElementShouldThrowIllegalStateException() {
-        assertTrue(false);
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void Checking_Non_Checkable_Element_Should_Throw_Illegal_Argument_Exception() {
+        final WebElement webElement = new WebElementMock().withTagName("div");
+
+        final ElementCollectionImpl elementCollection = new ElementCollectionImpl(mockWebDriver(), webElement);
+
+        elementCollection.val(true);
+        fail("A non clickable element should throw IllegalArgumentException");
     }
 //
 //    public void testValByIndex() throws Exception {
