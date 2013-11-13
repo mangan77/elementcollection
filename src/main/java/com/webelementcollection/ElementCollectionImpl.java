@@ -42,14 +42,6 @@ class ElementCollectionImpl implements ElementCollection {
         return getElementCollection(cssSelector, By.cssSelector(cssSelector));
     }
 
-    private ElementCollection getElementCollection(final String selectorString, final By by) {
-        List<WebElement> newList = Lists.newArrayList();
-        for (WebElement element : webElements) {
-            newList.addAll(element.findElements(by));
-        }
-        return new ElementCollectionImpl(driver, selectorString, newList);
-    }
-
     @Override
     public ElementCollection click() {
         checkState(!webElements.isEmpty(), "Trying to click on non existing element. Selector used \"" + selectorString + "\"");
@@ -100,55 +92,6 @@ class ElementCollectionImpl implements ElementCollection {
     @Override
     public ElementCollection valByVisibleText(final String text) {
         return val(text, new SelectByVisibleText(text));
-    }
-
-    private ElementCollection val(final String text, final SelectFunction selectFunction) {
-        checkState(webElements.isEmpty(), "Trying to set text:\"" + text + "\" on empty webElements. Selector used \"" + selectorString + "\"");
-        for (WebElement element : webElements) {
-            if (isSelectBox(element)) {
-                selectFunction.apply(element);
-            } else {
-                setValue(element, text);
-            }
-        }
-        return this;
-    }
-
-    private boolean isSelectBox(final WebElement element) {
-        return isTag(element, "select");
-    }
-
-    private boolean isTag(WebElement element, String tagName) {
-        return hasTagName(element) && tagNameIs(element, tagName);
-    }
-
-    private boolean tagNameIs(WebElement element, String tagName) {
-        return tagName.toLowerCase().equals(element.getTagName().toLowerCase());
-    }
-
-    private boolean hasTagName(WebElement element) {
-        return element.getTagName() != null;
-    }
-
-    private boolean isCheckbox(final WebElement element) {
-        return isInputOfType(element, "checkbox");
-    }
-
-    private boolean isInputOfType(WebElement element, String type) {
-        return isTag(element, "input") && typeIs(element, type);
-    }
-
-    private boolean typeIs(WebElement element, String type) {
-        return type.equals(element.getAttribute("type"));
-    }
-
-    private boolean isRadioButton(final WebElement element) {
-        return isInputOfType(element, "radio");
-    }
-
-    @Override
-    public ElementCollection val(final int value) {
-        return val(String.valueOf(value));
     }
 
     @Override
@@ -206,6 +149,63 @@ class ElementCollectionImpl implements ElementCollection {
     @Override
     public int length() {
         return webElements.size();
+    }
+
+    private ElementCollection getElementCollection(final String selectorString, final By by) {
+        List<WebElement> newList = Lists.newArrayList();
+        for (WebElement element : webElements) {
+            newList.addAll(element.findElements(by));
+        }
+        return new ElementCollectionImpl(driver, selectorString, newList);
+    }
+
+    private ElementCollection val(final String text, final SelectFunction selectFunction) {
+        checkState(webElements.size() > 0, "Trying to set text:\"" + text + "\" on empty webElements. Selector used \"" + selectorString + "\"");
+        for (WebElement element : webElements) {
+            if (isSelectBox(element)) {
+                selectFunction.apply(element);
+            } else {
+                setValue(element, text);
+            }
+        }
+        return this;
+    }
+
+    private boolean isSelectBox(final WebElement element) {
+        return isTag(element, "select");
+    }
+
+    private boolean isTag(WebElement element, String tagName) {
+        return hasTagName(element) && tagNameIs(element, tagName);
+    }
+
+    private boolean tagNameIs(WebElement element, String tagName) {
+        return tagName.toLowerCase().equals(element.getTagName().toLowerCase());
+    }
+
+    private boolean hasTagName(WebElement element) {
+        return element.getTagName() != null;
+    }
+
+    private boolean isCheckbox(final WebElement element) {
+        return isInputOfType(element, "checkbox");
+    }
+
+    private boolean isInputOfType(WebElement element, String type) {
+        return isTag(element, "input") && typeIs(element, type);
+    }
+
+    private boolean typeIs(WebElement element, String type) {
+        return type.equals(element.getAttribute("type"));
+    }
+
+    private boolean isRadioButton(final WebElement element) {
+        return isInputOfType(element, "radio");
+    }
+
+    @Override
+    public ElementCollection val(final int value) {
+        return val(String.valueOf(value));
     }
 
     private void setValue(WebElement element, String value) {
