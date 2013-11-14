@@ -1,11 +1,11 @@
-package com.webelementcollection;
+package com.elementcollection;
 
+import com.elementcollection.functions.select.SelectByIndex;
+import com.elementcollection.functions.select.SelectByValue;
+import com.elementcollection.functions.select.SelectByVisibleText;
+import com.elementcollection.functions.select.SelectFunction;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.webelementcollection.functions.select.SelectByIndex;
-import com.webelementcollection.functions.select.SelectByValue;
-import com.webelementcollection.functions.select.SelectByVisibleText;
-import com.webelementcollection.functions.select.SelectFunction;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 

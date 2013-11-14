@@ -1,4 +1,4 @@
-package com.webelementcollection;
+package com.elementcollection;
 
 /**
  * <br> User: must <br> Date: 2012-11-28

@@ -1,4 +1,4 @@
-package com.webelementcollection.functions.select;
+package com.elementcollection.functions.select;
 
 import com.google.common.base.Function;
 import org.openqa.selenium.WebElement;

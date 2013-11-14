@@ -1,4 +1,4 @@
-package com.webelementcollection;
+package com.elementcollection;
 
 
 import java.util.List;

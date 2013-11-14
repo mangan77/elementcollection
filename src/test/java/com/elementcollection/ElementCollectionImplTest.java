@@ -1,4 +1,4 @@
-package com.webelementcollection;
+package com.elementcollection;
 
 import com.google.common.collect.Lists;
 import org.openqa.selenium.By;
