@@ -256,7 +256,7 @@ public class ElementCollectionImplTest {
     }
 
     private ElementCollection elementCollection(WebElement... webElement) {
-        return new ElementCollectionImpl(mockWebDriver(), webElement);
+        return new ElementCollectionImpl(webElement);
     }
 
     private static WebDriver mockWebDriver() {

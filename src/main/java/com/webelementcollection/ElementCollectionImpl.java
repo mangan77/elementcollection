@@ -7,7 +7,6 @@ import com.webelementcollection.functions.select.SelectByValue;
 import com.webelementcollection.functions.select.SelectByVisibleText;
 import com.webelementcollection.functions.select.SelectFunction;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nullable;
@@ -20,21 +19,19 @@ import static com.google.common.base.Preconditions.*;
 class ElementCollectionImpl implements ElementCollection {
 
     private final List<WebElement> webElements;
-    private final WebDriver driver;
     private final String selectorString;
 
-    ElementCollectionImpl(final WebDriver driver, @Nullable final String selectorString, final List<WebElement> webElements) {
-        this.driver = checkNotNull(driver, "driver");
+    ElementCollectionImpl(@Nullable final String selectorString, final List<WebElement> webElements) {
         this.webElements = checkNotNull(webElements, "webElements");
         this.selectorString = selectorString;
     }
 
-    ElementCollectionImpl(final WebDriver driver, @Nullable final String selectorString, final WebElement... webElements) {
-        this(driver, selectorString, Lists.newArrayList(checkNotNull(webElements)));
+    ElementCollectionImpl(@Nullable final String selectorString, final WebElement... webElements) {
+        this(selectorString, Lists.newArrayList(checkNotNull(webElements)));
     }
 
-    ElementCollectionImpl(final WebDriver driver, final WebElement... webElements) {
-        this(driver, null, Lists.newArrayList(checkNotNull(webElements)));
+    ElementCollectionImpl(final WebElement... webElements) {
+        this(null, Lists.newArrayList(checkNotNull(webElements)));
     }
 
     @Override
@@ -63,7 +60,7 @@ class ElementCollectionImpl implements ElementCollection {
     @Override
     public ElementCollection get(final int index) {
         try {
-            return new ElementCollectionImpl(driver, selectorString, webElements.get(index));
+            return new ElementCollectionImpl(selectorString, webElements.get(index));
         } catch (IndexOutOfBoundsException e) {
             throw new IllegalStateException("Element collection selected with \"" + selectorString + "\" returned null for index:" + index, e);
         }
@@ -128,7 +125,7 @@ class ElementCollectionImpl implements ElementCollection {
     public List<ElementCollection> getElements() {
         List<ElementCollection> elements = Lists.newArrayList();
         for (WebElement webElement : webElements) {
-            elements.add(new ElementCollectionImpl(driver, selectorString, webElement));
+            elements.add(new ElementCollectionImpl(selectorString, webElement));
         }
         return elements;
     }
@@ -156,7 +153,7 @@ class ElementCollectionImpl implements ElementCollection {
         for (WebElement element : webElements) {
             newList.addAll(element.findElements(by));
         }
-        return new ElementCollectionImpl(driver, selectorString, newList);
+        return new ElementCollectionImpl(selectorString, newList);
     }
 
     private ElementCollection val(final String text, final SelectFunction selectFunction) {
