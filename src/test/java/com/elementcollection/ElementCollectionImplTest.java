@@ -259,7 +259,4 @@ public class ElementCollectionImplTest {
         return new ElementCollectionImpl(webElement);
     }
 
-    private static WebDriver mockWebDriver() {
-        return mock(WebDriver.class);
-    }
 }
