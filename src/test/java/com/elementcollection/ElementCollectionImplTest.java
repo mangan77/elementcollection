@@ -2,7 +2,6 @@ package com.elementcollection;
 
 import com.google.common.collect.Lists;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
@@ -14,10 +13,20 @@ import static org.testng.Assert.*;
  */
 @Test(groups = "unit")
 public class ElementCollectionImplTest {
-    //    public void testFind() throws Exception {
-//
-//    }
-//
+
+    public void testGetElementsOnEmptyCollectionShouldReturnEmptyCollection() {
+        assertEquals(emptyElementCollection().getElements().size(), 0);
+    }
+
+    public void testGetElementsOnNonEmptyCollectionShouldReturnTheCorrectNumberOfElements() {
+        final ElementCollection elementCollection = elementCollection(
+                new WebElementMockBuilder().build(),
+                new WebElementMockBuilder().build(),
+                new WebElementMockBuilder().build()
+        );
+        assertEquals(elementCollection.getElements().size(), 3);
+    }
+
     @Test(expectedExceptions = IllegalStateException.class)
     public void Clicking_An_Empty_Collection_Should_Throw_Illegal_Argument_Exception() {
         final ElementCollection elementCollection = emptyElementCollection();
@@ -36,9 +45,7 @@ public class ElementCollectionImplTest {
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void Submitting_An_Empty_Collection_Should_Throw_Illegal_State_Exception() {
-        final ElementCollection elementCollection = emptyElementCollection();
-        elementCollection.submit();
-        fail();
+        emptyElementCollection().submit();
     }
 
     public void When_More_Then_One_Element_In_Collection_All_Elements_Should_Get_Submitted() {
@@ -52,16 +59,12 @@ public class ElementCollectionImplTest {
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void Getting_An_Element_From_An_Empty_Collection_Should_Throw_Illegal_State_Exception() {
-        final ElementCollection elementCollection = emptyElementCollection();
-
-        elementCollection.get(0);
-        fail();
+        emptyElementCollection().get(0);
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void Specifying_An_Index_Outside_The_Collection_Should_Throw_Illegal_State_Exception() {
         elementCollection(new WebElementMockBuilder().build()).get(1);
-        fail();
     }
 
     public void Getting_An_Element_In_The_Collection_Should_Return_The_Correct_Element() {
@@ -75,7 +78,6 @@ public class ElementCollectionImplTest {
     @Test(expectedExceptions = IllegalStateException.class)
     public void Getting_The_First_Element_From_An_Empty_Collection_Should_Throw_Illegal_State_Exception() {
         emptyElementCollection().first();
-        fail();
     }
 
     public void Getting_The_First_Element_From_A_Collection_Should_Return_The_First_Element() {
@@ -87,10 +89,7 @@ public class ElementCollectionImplTest {
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void Getting_The_Last_Element_From_An_Empty_Collection_Should_Throw_Illegal_State_Exception() {
-        final ElementCollection elementCollection = emptyElementCollection();
-
-        elementCollection.last();
-        fail();
+        emptyElementCollection().last();
     }
 
     public void Getting_The_Last_Element_From_A_Collection_Should_Return_The_Last_Element() {
@@ -155,9 +154,7 @@ public class ElementCollectionImplTest {
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void Checking_Non_Checkable_Element_Should_Throw_Illegal_Argument_Exception() {
         final WebElement webElement = new WebElementMockBuilder().withTagName("div").build();
-
         elementCollection(webElement).val(true);
-        fail("A non clickable element should throw IllegalArgumentException");
     }
 
     public void When_At_Least_One_Element_In_Collection_Is_Not_Displayed_Should_Give_False() throws Exception {
@@ -167,44 +164,73 @@ public class ElementCollectionImplTest {
         assertFalse(elementCollection(webElementOne, webElementTwo).isDisplayed());
     }
 
-    //
-//    }
     public void No_Element_In_Collection_Should_Give_False() {
-        final ElementCollection elementCollection = emptyElementCollection();
-        assertFalse(elementCollection.isDisplayed());
+        assertFalse(emptyElementCollection().isDisplayed());
     }
 
-    //
+    public void Find_On_Empty_Collection_Should_Return_Empty_Collection() {
+        assertEquals(emptyElementCollection().find(".class").length(), 0);
+    }
 
+    public void Find_When_No_Elements_Can_Be_Found_Should_Return_Empty_Collection() {
+        final WebElement one = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(), By.cssSelector("something")).build();
+        final WebElement two = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(), By.cssSelector("something")).build();
+        final WebElement three = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(), By.cssSelector("something")).build();
 
-    //    public void testFindByXpath() throws Exception {
-//
-//    }
-//
-//    public void testFindByName() throws Exception {
-//
-//    }
-//
-//    public void testVal() throws Exception {
-//
-//    }
-//
-//    public void testAttr() throws Exception {
-//
-//    }
-//
-//    public void testVal() throws Exception {
-//
-//    }
-//
-//    public void testVal() throws Exception {
-//
-//    }
-//
-//    }
-//
+        assertEquals(elementCollection(one, two, three).find("something").length(), 0);
+    }
+
+    public void Find_Elements_Should_Return_All_Found_Elements() {
+        final WebElement one_a = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(), By.cssSelector("something")).build();
+        final WebElement one = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(one_a), By.cssSelector("something")).build();
+        final WebElement two = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(), By.cssSelector("something")).build();
+        final WebElement three = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(), By.cssSelector("something")).build();
+
+        assertEquals(elementCollection(one, two, three).find("something").length(), 1);
+    }
+
+    public void Setting_Integer_Value_To_A_Non_Select_Element_Should_Set_Value_To_Integer_Value() {
+        final WebElement input = new WebElementMockBuilder().withTagName("input").isDisplayed(true).build();
+        elementCollection(input).val(1);
+        verify(input).sendKeys("1");
+    }
+
+    public void Setting_Value_To_A_Non_Select_Element_Should_Set_Value_To_Value() {
+        final WebElement input = new WebElementMockBuilder().withTagName("input").isDisplayed(true).build();
+        elementCollection(input).val("valluee");
+        verify(input).sendKeys("valluee");
+    }
+
+    public void Setting_Value_On_A_Single_Select_Should_Select_The_Correct_Option() {
+        final WebElement one = optionWithText("text").build();
+        final WebElement two = optionWithText("text").build();
+
+        final WebElement select = new WebElementMockBuilder()
+                .withTagName("select")
+                .finds(Lists.newArrayList(one, two), By.xpath(".//option[@value = \"text\"]"))
+                .build();
+
+        elementCollection(select).val("text");
+        verify(one).click();
+        verifyZeroInteractions(two);
+    }
+
+    public void Setting_Value_On_A_Multi_Select_Should_Select_All_The_Correct_Options() {
+        final WebElement one = optionWithText("text").build();
+        final WebElement two = optionWithText("text").build();
+
+        final WebElement select = new WebElementMockBuilder()
+                .withTagName("select")
+                .finds(Lists.newArrayList(one, two), By.xpath(".//option[@value = \"text\"]"))
+                .withAttribute("multiple", "true")
+                .build();
+
+        elementCollection(select).val("text");
+        verify(one).click();
+        verify(two).click();
+    }
+
     public void Setting_Value_By_Index_On_A_Select_Should_Select_The_Correct_Option() {
-
         final WebElement zero = optionWithIndex("0").build();
         final WebElement one = optionWithIndex("1").build();
         final WebElement two = optionWithIndex("2").build();
@@ -216,7 +242,6 @@ public class ElementCollectionImplTest {
 
         elementCollection(select).valByIndex(1);
         verify(one).click();
-
     }
 
     public void Setting_Value_By_Index_On_Non_Select_Element_Should_Set_Value_To_Value_Of_Index() {
@@ -225,11 +250,47 @@ public class ElementCollectionImplTest {
         verify(input).sendKeys("2");
     }
 
-    //    public void testValByVisibleText() throws Exception {
+    public void Setting_Value_By_Visible_Text_On_Non_Select_Element_Should_Set_Value_Correctly() {
+        final WebElement input = new WebElementMockBuilder().withTagName("input").isDisplayed(true).build();
+        elementCollection(input).valByVisibleText("text");
+        verify(input).sendKeys("text");
+    }
 
+    public void Setting_Value_By_Visible_Text_On_A_Single_Select_Should_Select_The_Correct_Option() {
+        final WebElement one = optionWithText("text").build();
+        final WebElement two = optionWithText("text").build();
+
+        final WebElement select = new WebElementMockBuilder()
+                .withTagName("select")
+                .finds(Lists.newArrayList(one, two), By.xpath(".//option[normalize-space(.) = \"text\"]"))
+                .build();
+
+        elementCollection(select).valByVisibleText("text");
+        verify(one).click();
+        verifyZeroInteractions(two);
+    }
+
+    public void Setting_Value_By_Visible_Text_On_A_Multi_Select_Should_Select_All_The_Correct_Options() {
+        final WebElement one = optionWithText("text").build();
+        final WebElement two = optionWithText("text").build();
+
+        final WebElement select = new WebElementMockBuilder()
+                .withTagName("select")
+                .finds(Lists.newArrayList(one, two), By.xpath(".//option[normalize-space(.) = \"text\"]"))
+                .withAttribute("multiple", "true")
+                .build();
+
+        elementCollection(select).valByVisibleText("text");
+        verify(one).click();
+        verify(two).click();
+    }
 
     private WebElementMockBuilder optionWithIndex(String index) {
         return new WebElementMockBuilder().withTagName("option").withAttribute("index", index);
+    }
+
+    private WebElementMockBuilder optionWithText(String text) {
+        return new WebElementMockBuilder().withTagName("option").withText(text);
     }
 
     public void When_All_Elements_Are_Displayed_In_Collection_Should_Give_True() throws Exception {
@@ -250,7 +311,6 @@ public class ElementCollectionImplTest {
         assertEquals(elementCollection(one, two).length(), 2);
     }
 
-    //*
     private ElementCollection emptyElementCollection() {
         return elementCollection();
     }
