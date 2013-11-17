@@ -36,7 +36,7 @@ class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public ElementCollection find(String cssSelector) {
-        return getElementCollection(cssSelector, By.cssSelector(cssSelector));
+        return getElementCollection(cssSelector);
     }
 
     @Override
@@ -112,16 +112,6 @@ class ElementCollectionImpl implements ElementCollection {
     }
 
     @Override
-    public ElementCollection findByName(final String name) {
-        return find("[name='" + name + "']");
-    }
-
-    @Override
-    public ElementCollection findByXpath(final String xpath) {
-        return getElementCollection(xpath, By.xpath(xpath));
-    }
-
-    @Override
     public List<ElementCollection> getElements() {
         List<ElementCollection> elements = Lists.newArrayList();
         for (WebElement webElement : webElements) {
@@ -148,10 +138,10 @@ class ElementCollectionImpl implements ElementCollection {
         return webElements.size();
     }
 
-    private ElementCollection getElementCollection(final String selectorString, final By by) {
+    private ElementCollection getElementCollection(final String selectorString) {
         List<WebElement> newList = Lists.newArrayList();
         for (WebElement element : webElements) {
-            newList.addAll(element.findElements(by));
+            newList.addAll(element.findElements(By.cssSelector(selectorString)));
         }
         return new ElementCollectionImpl(selectorString, newList);
     }

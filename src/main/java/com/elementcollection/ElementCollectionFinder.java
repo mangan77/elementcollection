@@ -7,7 +7,4 @@ public interface ElementCollectionFinder {
 
     ElementCollection find(String cssSelector);
 
-    ElementCollection findByName(String name);
-
-    ElementCollection findByXpath(String xpath);
 }
