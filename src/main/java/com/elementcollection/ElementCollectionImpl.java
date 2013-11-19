@@ -48,19 +48,13 @@ class ElementCollectionImpl implements ElementCollection {
     @Override
     public ElementCollection find(String cssSelector) {
         final List<WebElement> foundElements = executor.execute(new Find(cssSelector), ElementSupplier.multiple(webElements));
-        resetExecutor();
-        return new ElementCollectionImpl(cssSelector, foundElements);
+        return new ElementCollectionImpl(cssSelector, new Executor(), foundElements);
     }
 
     @Override
     public ElementCollection click() {
         executor.execute(new Click(), ElementSupplier.multiple(webElements));
-        resetExecutor();
-        return this;
-    }
-
-    private void resetExecutor() {
-        this.executor = new Executor();
+        return new ElementCollectionImpl(selectorString, new Executor(), webElements);
     }
 
     @Override
@@ -69,13 +63,13 @@ class ElementCollectionImpl implements ElementCollection {
         for (WebElement element : webElements) {
             element.submit();
         }
-        return this;
+        return new ElementCollectionImpl(selectorString, new Executor(), webElements);
     }
 
     @Override
     public ElementCollection get(final int index) {
         try {
-            return new ElementCollectionImpl(selectorString, webElements.get(index));
+            return new ElementCollectionImpl(selectorString, new Executor(), Lists.newArrayList(webElements.get(index)));
         } catch (IndexOutOfBoundsException e) {
             throw new IllegalStateException("Element collection selected with \"" + selectorString + "\" returned null for index:" + index, e);
         }
@@ -123,14 +117,14 @@ class ElementCollectionImpl implements ElementCollection {
         for (WebElement element : webElements) {
             setValue(element, value);
         }
-        return this;
+        return new ElementCollectionImpl(selectorString, new Executor(), webElements);
     }
 
     @Override
     public List<ElementCollection> getElements() {
         List<ElementCollection> elements = Lists.newArrayList();
         for (WebElement webElement : webElements) {
-            elements.add(new ElementCollectionImpl(selectorString, webElement));
+            elements.add(new ElementCollectionImpl(selectorString, new Executor(), Lists.newArrayList(webElement)));
         }
         return elements;
     }
@@ -162,7 +156,7 @@ class ElementCollectionImpl implements ElementCollection {
                 setValue(element, text);
             }
         }
-        return this;
+        return new ElementCollectionImpl(selectorString, new Executor(), webElements);
     }
 
     private boolean isSelectBox(final WebElement element) {
