@@ -1,12 +1,16 @@
 package com.elementcollection;
 
+import com.elementcollection.executors.Executor;
+import com.elementcollection.executors.WithinExecutor;
+import com.elementcollection.executors.functions.Click;
+import com.elementcollection.executors.functions.Find;
+import com.elementcollection.executors.supplier.ElementSupplier;
 import com.elementcollection.functions.select.SelectByIndex;
 import com.elementcollection.functions.select.SelectByValue;
 import com.elementcollection.functions.select.SelectByVisibleText;
 import com.elementcollection.functions.select.SelectFunction;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nullable;
@@ -21,9 +25,16 @@ class ElementCollectionImpl implements ElementCollection {
     private final List<WebElement> webElements;
     private final String selectorString;
 
-    ElementCollectionImpl(@Nullable final String selectorString, final List<WebElement> webElements) {
+    private Executor executor;
+
+    private ElementCollectionImpl(@Nullable String selectorString, Executor executor, List<WebElement> webElements) {
         this.webElements = checkNotNull(webElements, "webElements");
         this.selectorString = selectorString;
+        this.executor = executor;
+    }
+
+    ElementCollectionImpl(@Nullable final String selectorString, final List<WebElement> webElements) {
+        this(selectorString, new Executor(), webElements);
     }
 
     ElementCollectionImpl(@Nullable final String selectorString, final WebElement... webElements) {
@@ -36,16 +47,20 @@ class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public ElementCollection find(String cssSelector) {
-        return getElementCollection(cssSelector);
+        final List<WebElement> foundElements = executor.execute(new Find(cssSelector), ElementSupplier.multiple(webElements));
+        resetExecutor();
+        return new ElementCollectionImpl(cssSelector, foundElements);
     }
 
     @Override
     public ElementCollection click() {
-        checkState(!webElements.isEmpty(), "Trying to click on non existing element. Selector used \"" + selectorString + "\"");
-        for (WebElement element : webElements) {
-            element.click();
-        }
+        executor.execute(new Click(), ElementSupplier.multiple(webElements));
+        resetExecutor();
         return this;
+    }
+
+    private void resetExecutor() {
+        this.executor = new Executor();
     }
 
     @Override
@@ -138,14 +153,6 @@ class ElementCollectionImpl implements ElementCollection {
         return webElements.size();
     }
 
-    private ElementCollection getElementCollection(final String selectorString) {
-        List<WebElement> newList = Lists.newArrayList();
-        for (WebElement element : webElements) {
-            newList.addAll(element.findElements(By.cssSelector(selectorString)));
-        }
-        return new ElementCollectionImpl(selectorString, newList);
-    }
-
     private ElementCollection val(final String text, final SelectFunction selectFunction) {
         checkState(webElements.size() > 0, "Trying to set text:\"" + text + "\" on empty webElements. Selector used \"" + selectorString + "\"");
         for (WebElement element : webElements) {
@@ -193,6 +200,11 @@ class ElementCollectionImpl implements ElementCollection {
     @Override
     public ElementCollection val(final int value) {
         return val(String.valueOf(value));
+    }
+
+    @Override
+    public ElementCollection within(int secs) {
+        return new ElementCollectionImpl(selectorString, new WithinExecutor(secs), webElements);
     }
 
     private void setValue(WebElement element, String value) {

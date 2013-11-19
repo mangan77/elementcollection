@@ -43,4 +43,6 @@ public interface ElementCollection extends ElementCollectionFinder {
     boolean isDisplayed();
 
     ElementCollection valByVisibleText(String text);
+
+    ElementCollection within(int secs);
 }
