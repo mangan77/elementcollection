@@ -1,15 +1,15 @@
 package com.elementcollection;
 
 import com.elementcollection.executors.Executor;
+import com.elementcollection.executors.ValidatableReturnValue;
 import com.elementcollection.executors.WithinExecutor;
-import com.elementcollection.executors.functions.Click;
-import com.elementcollection.executors.functions.Find;
+import com.elementcollection.executors.functions.*;
 import com.elementcollection.executors.supplier.ElementSupplier;
 import com.elementcollection.functions.select.SelectByIndex;
 import com.elementcollection.functions.select.SelectByValue;
 import com.elementcollection.functions.select.SelectByVisibleText;
 import com.elementcollection.functions.select.SelectFunction;
-import com.google.common.collect.Iterables;
+import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.openqa.selenium.WebElement;
 
@@ -47,42 +47,36 @@ class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public ElementCollection find(String cssSelector) {
-        final List<WebElement> foundElements = executor.execute(new Find(cssSelector), ElementSupplier.multiple(webElements));
-        return new ElementCollectionImpl(cssSelector, new Executor(), foundElements);
+        return new ElementCollectionImpl(cssSelector, new Executor(), executeWithMultiple(new Find(cssSelector)));
+    }
+
+    private List<WebElement> executeWithMultiple(Function<List<WebElement>, ValidatableReturnValue<List<WebElement>>> operation) {
+        return executor.execute(operation, ElementSupplier.multiple(webElements));
     }
 
     @Override
     public ElementCollection click() {
-        executor.execute(new Click(), ElementSupplier.multiple(webElements));
-        return new ElementCollectionImpl(selectorString, new Executor(), webElements);
+        return new ElementCollectionImpl(selectorString, new Executor(), executeWithMultiple(new Click()));
     }
 
     @Override
     public ElementCollection submit() {
-        checkState(!webElements.isEmpty(), "Trying to submit a non existing element. Selector used \"" + selectorString + "\"");
-        for (WebElement element : webElements) {
-            element.submit();
-        }
-        return new ElementCollectionImpl(selectorString, new Executor(), webElements);
+        return new ElementCollectionImpl(selectorString, new Executor(), executeWithMultiple(new Submit()));
     }
 
     @Override
     public ElementCollection get(final int index) {
-        try {
-            return new ElementCollectionImpl(selectorString, new Executor(), Lists.newArrayList(webElements.get(index)));
-        } catch (IndexOutOfBoundsException e) {
-            throw new IllegalStateException("Element collection selected with \"" + selectorString + "\" returned null for index:" + index, e);
-        }
+        return new ElementCollectionImpl(selectorString, new Executor(), executeWithMultiple(new Get(index, selectorString)));
     }
 
     @Override
     public ElementCollection first() {
-        return get(0);
+        return new ElementCollectionImpl(selectorString, new Executor(), executeWithMultiple(new First()));
     }
 
     @Override
     public ElementCollection last() {
-        return get(webElements.size() - 1);
+        return new ElementCollectionImpl(selectorString, new Executor(), executeWithMultiple(new Last()));
     }
 
     @Override
@@ -102,14 +96,12 @@ class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public String val() {
-        final WebElement webElement = Iterables.getFirst(webElements, null);
-        return webElement != null ? webElement.getText() : null;
+        return executor.execute(new GetVal(), ElementSupplier.multiple(webElements));
     }
 
     @Override
     public String attr(final String name) {
-        final WebElement webElement = Iterables.getFirst(webElements, null);
-        return webElement != null ? webElement.getAttribute(name) : null;
+        return executor.execute(new Attr(name), ElementSupplier.multiple(webElements));
     }
 
     @Override
