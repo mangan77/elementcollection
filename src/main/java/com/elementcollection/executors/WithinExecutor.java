@@ -11,6 +11,7 @@ public class WithinExecutor extends Executor {
     private final int withinSecs;
 
     public WithinExecutor(int withinSecs) {
+        super();
         this.withinSecs = withinSecs;
     }
 
