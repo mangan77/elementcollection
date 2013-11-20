@@ -20,7 +20,7 @@ import java.util.List;
 import static com.google.common.base.Preconditions.*;
 
 @ParametersAreNonnullByDefault
-class ElementCollectionImpl implements ElementCollection {
+public class ElementCollectionImpl implements ElementCollection {
 
     private final List<WebElement> webElements;
     private final String selectorString;
@@ -33,15 +33,15 @@ class ElementCollectionImpl implements ElementCollection {
         this.executor = executor;
     }
 
-    ElementCollectionImpl(@Nullable final String selectorString, final List<WebElement> webElements) {
+    public ElementCollectionImpl(@Nullable final String selectorString, final List<WebElement> webElements) {
         this(selectorString, new Executor(), webElements);
     }
 
-    ElementCollectionImpl(@Nullable final String selectorString, final WebElement... webElements) {
+    public ElementCollectionImpl(@Nullable final String selectorString, final WebElement... webElements) {
         this(selectorString, Lists.newArrayList(checkNotNull(webElements)));
     }
 
-    ElementCollectionImpl(final WebElement... webElements) {
+    public ElementCollectionImpl(final WebElement... webElements) {
         this(null, Lists.newArrayList(checkNotNull(webElements)));
     }
 
