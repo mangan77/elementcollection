@@ -13,7 +13,7 @@ import java.util.List;
 @ParametersAreNonnullByDefault
 public final class ElementCollectionFactory {
 
-    public ElementCollectionFactory() {
+    private ElementCollectionFactory() {
     }
 
     public static ElementCollection create(WebElement... webElements) {
