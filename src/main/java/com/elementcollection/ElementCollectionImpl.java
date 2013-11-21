@@ -5,10 +5,6 @@ import com.elementcollection.executors.ValidatableReturnValue;
 import com.elementcollection.executors.WithinExecutor;
 import com.elementcollection.executors.functions.*;
 import com.elementcollection.executors.supplier.ElementSupplier;
-import com.elementcollection.functions.select.SelectByIndex;
-import com.elementcollection.functions.select.SelectByValue;
-import com.elementcollection.functions.select.SelectByVisibleText;
-import com.elementcollection.functions.select.SelectFunction;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.openqa.selenium.WebElement;
@@ -17,7 +13,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @ParametersAreNonnullByDefault
 public class ElementCollectionImpl implements ElementCollection {
@@ -81,17 +77,17 @@ public class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public ElementCollection val(final String value) {
-        return val(value, new SelectByValue(value));
+        return new ElementCollectionImpl(selectorString, new Executor(), executeWithMultiple(SetVal.forValue(value)));
     }
 
     @Override
     public ElementCollection valByIndex(final int index) {
-        return val(String.valueOf(index), new SelectByIndex(index));
+        return new ElementCollectionImpl(selectorString, new Executor(), executeWithMultiple(SetVal.forIndex(index)));
     }
 
     @Override
     public ElementCollection valByVisibleText(final String text) {
-        return val(text, new SelectByVisibleText(text));
+        return new ElementCollectionImpl(selectorString, new Executor(), executeWithMultiple(SetVal.forVisibleValue(text)));
     }
 
     @Override
@@ -106,10 +102,7 @@ public class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public ElementCollection val(final boolean value) {
-        for (WebElement element : webElements) {
-            setValue(element, value);
-        }
-        return new ElementCollectionImpl(selectorString, new Executor(), webElements);
+        return new ElementCollectionImpl(selectorString, new Executor(), executeWithMultiple(new SetBooleanVal(value)));
     }
 
     @Override
@@ -139,50 +132,6 @@ public class ElementCollectionImpl implements ElementCollection {
         return webElements.size();
     }
 
-    private ElementCollection val(final String text, final SelectFunction selectFunction) {
-        checkState(webElements.size() > 0, "Trying to set text:\"" + text + "\" on empty webElements. Selector used \"" + selectorString + "\"");
-        for (WebElement element : webElements) {
-            if (isSelectBox(element)) {
-                selectFunction.apply(element);
-            } else {
-                setValue(element, text);
-            }
-        }
-        return new ElementCollectionImpl(selectorString, new Executor(), webElements);
-    }
-
-    private boolean isSelectBox(final WebElement element) {
-        return isTag(element, "select");
-    }
-
-    private boolean isTag(WebElement element, String tagName) {
-        return hasTagName(element) && tagNameIs(element, tagName);
-    }
-
-    private boolean tagNameIs(WebElement element, String tagName) {
-        return tagName.toLowerCase().equals(element.getTagName().toLowerCase());
-    }
-
-    private boolean hasTagName(WebElement element) {
-        return element.getTagName() != null;
-    }
-
-    private boolean isCheckbox(final WebElement element) {
-        return isInputOfType(element, "checkbox");
-    }
-
-    private boolean isInputOfType(WebElement element, String type) {
-        return isTag(element, "input") && typeIs(element, type);
-    }
-
-    private boolean typeIs(WebElement element, String type) {
-        return type.equals(element.getAttribute("type"));
-    }
-
-    private boolean isRadioButton(final WebElement element) {
-        return isInputOfType(element, "radio");
-    }
-
     @Override
     public ElementCollection val(final int value) {
         return val(String.valueOf(value));
@@ -191,34 +140,6 @@ public class ElementCollectionImpl implements ElementCollection {
     @Override
     public ElementCollection within(int secs) {
         return new ElementCollectionImpl(selectorString, new WithinExecutor(secs), webElements);
-    }
-
-    private void setValue(WebElement element, String value) {
-        if (element.isDisplayed()) {
-            element.clear();
-            element.sendKeys(value);
-        }
-    }
-
-    private void setValue(WebElement element, boolean value) {
-        checkArgument(isCheckbox(element) || isRadioButton(element) || isSelectOption(element),
-                "Boolean values can only be set to checkboxes, radio buttons and select options");
-
-        if (isSelectedButShouldBeDeselected(element, value) || isNotSelectedButShouldBeSelected(element, value)) {
-            element.click();
-        }
-    }
-
-    private boolean isSelectOption(WebElement element) {
-        return isTag(element, "option");
-    }
-
-    private boolean isNotSelectedButShouldBeSelected(WebElement element, boolean value) {
-        return !element.isSelected() && value;
-    }
-
-    private boolean isSelectedButShouldBeDeselected(WebElement element, boolean value) {
-        return element.isSelected() && !value;
     }
 
 }
