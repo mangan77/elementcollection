@@ -1,6 +1,6 @@
 package com.elementcollection.example;
 
-import com.elementcollection.adapters.WebDriverAdapter;
+import com.elementcollection.adapter.WebDriverAdapter;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import javax.annotation.ParametersAreNonnullByDefault;
