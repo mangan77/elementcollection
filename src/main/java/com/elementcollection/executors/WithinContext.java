@@ -6,11 +6,11 @@ import com.google.common.base.Supplier;
 /**
  * <br> User: Mangan <br> Date: 19/11/13
  */
-public class WithinExecutor extends Executor {
+public class WithinContext extends Context {
 
     private final int withinSecs;
 
-    public WithinExecutor(int withinSecs) {
+    public WithinContext(int withinSecs) {
         super();
         this.withinSecs = withinSecs;
     }
