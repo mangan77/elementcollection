@@ -195,14 +195,14 @@ public class ElementCollectionImplTest {
         final WebElement child = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(), By.cssSelector("something")).build();
         final WebElement parent = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(child), By.cssSelector("something"), 2).build();
 
-        assertEquals(elementCollection(parent).within(3).find("something").length(), 1);
+        assertEquals(elementCollection(parent).within(TimeUnit.secs(3)).find("something").length(), 1);
     }
 
     public void testWithinShouldReturnNoElementsWhenTheyDoNotAppearBeforeTimeOut() {
         final WebElement child = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(), By.cssSelector("something")).build();
         final WebElement parent = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(child), By.cssSelector("something"), 3).build();
 
-        assertEquals(elementCollection(parent).within(2).find("something").length(), 0);
+        assertEquals(elementCollection(parent).within(TimeUnit.secs(2)).find("something").length(), 0);
     }
 
     public void Setting_Integer_Value_To_A_Non_Select_Element_Should_Set_Value_To_Integer_Value() {

@@ -1,6 +1,7 @@
 package com.elementcollection.impl;
 
 import com.elementcollection.ElementCollection;
+import com.elementcollection.TimeUnit;
 import com.elementcollection.impl.context.ExecutionContext;
 import com.elementcollection.impl.context.ExecutionContextWithin;
 import com.elementcollection.impl.context.function.*;
@@ -130,8 +131,8 @@ public class ElementCollectionImpl implements ElementCollection {
     }
 
     @Override
-    public ElementCollection within(int secs) {
-        return new ElementCollectionImpl(selectorString, new ExecutionContextWithin(secs), webElements);
+    public ElementCollection within(TimeUnit timeUnit) {
+        return new ElementCollectionImpl(selectorString, new ExecutionContextWithin(timeUnit), webElements);
     }
 
 }

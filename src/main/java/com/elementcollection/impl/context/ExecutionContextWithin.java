@@ -1,5 +1,6 @@
 package com.elementcollection.impl.context;
 
+import com.elementcollection.TimeUnit;
 import com.elementcollection.impl.context.returnvalue.ValidatableReturnValue;
 import com.google.common.base.Function;
 import org.openqa.selenium.WebElement;
@@ -11,16 +12,16 @@ import java.util.List;
  */
 public class ExecutionContextWithin extends ExecutionContext {
 
-    private final int withinSecs;
+    private final TimeUnit timeUnit;
 
-    public ExecutionContextWithin(int withinSecs) {
+    public ExecutionContextWithin(TimeUnit timeUnit) {
         super();
-        this.withinSecs = withinSecs;
+        this.timeUnit = timeUnit;
     }
 
     @Override
     public <T> T execute(Function<List<WebElement>, ValidatableReturnValue<T>> operation, List<WebElement> webElements) {
-        long endMillis = System.currentTimeMillis() + withinSecs * 1000;
+        long endMillis = endMilliseconds();
         RuntimeException exceptionCausingRetry = null;
         boolean shouldRetry = true;
         T retValue = null;
@@ -36,11 +37,14 @@ public class ExecutionContextWithin extends ExecutionContext {
                 exceptionCausingRetry = e;
             }
         }
-        if (shouldRetry) {
-            if (exceptionCausingRetry != null)
-                throw exceptionCausingRetry;
+        if (shouldRetry && exceptionCausingRetry != null) {
+            throw exceptionCausingRetry;
         }
         return retValue;
+    }
+
+    private long endMilliseconds() {
+        return System.currentTimeMillis() + timeUnit.inMilliseconds();
     }
 
     private boolean stillWithinTimeLimit(long endMillis) {
