@@ -1,5 +1,6 @@
 package com.elementcollection;
 
+import com.google.common.base.Function;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
@@ -11,5 +12,5 @@ import java.util.List;
  * </pre>
  */
 public interface FindContext {
-    List<WebElement> find(String cssSelector);
+    List<WebElement> find(String cssSelector, Function<String, List<WebElement>> findFunction);
 }

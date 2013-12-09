@@ -17,21 +17,21 @@ public class WebDriverElementCollectionFinder {
 
     public WebDriverElementCollectionFinder(WebDriver webDriver) {
         this.webDriver = webDriver;
-        this.findContext = defaultFindContext(webDriver);
+        this.findContext = defaultFindContext();
     }
 
     public List<WebElement> find(String cssSelector) {
-        final List<WebElement> webElements = findContext.find(cssSelector);
-        findContext = defaultFindContext(webDriver);
+        final List<WebElement> webElements = findContext.find(cssSelector, new WebDriverFindFunction(webDriver));
+        findContext = defaultFindContext();
         return webElements;
     }
 
     public WebDriverElementCollectionFinder within(int delayInMillis) {
-        this.findContext = new Delayed(new WebDriverFindFunction(webDriver), delayInMillis);
+        this.findContext = new Delayed(delayInMillis);
         return this;
     }
 
-    private RightNow defaultFindContext(WebDriver webDriver) {
-        return new RightNow(new WebDriverFindFunction(webDriver));
+    private RightNow defaultFindContext() {
+        return new RightNow();
     }
 }

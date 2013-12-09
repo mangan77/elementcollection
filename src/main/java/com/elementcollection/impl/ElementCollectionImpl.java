@@ -1,12 +1,9 @@
 package com.elementcollection.impl;
 
-import com.elementcollection.ElementCollection;
-import com.elementcollection.TimeUnit;
-import com.elementcollection.impl.context.ExecutionContext;
-import com.elementcollection.impl.context.ExecutionContextWithin;
-import com.elementcollection.impl.context.function.*;
-import com.elementcollection.impl.context.returnvalue.ValidatableReturnValue;
-import com.google.common.base.Function;
+import com.elementcollection.*;
+import com.elementcollection.impl.context.function.SetVal;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.openqa.selenium.WebElement;
 
@@ -14,24 +11,20 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.elementcollection.impl.util.ElementUtil.*;
+import static com.google.common.base.Preconditions.*;
 
 @ParametersAreNonnullByDefault
 public class ElementCollectionImpl implements ElementCollection {
 
     private final List<WebElement> webElements;
     private final String selectorString;
+    private FindContext findContext;
 
-    private ExecutionContext executionContext;
-
-    private ElementCollectionImpl(@Nullable String selectorString, ExecutionContext executionContext, List<WebElement> webElements) {
+    public ElementCollectionImpl(@Nullable String selectorString, List<WebElement> webElements) {
         this.webElements = checkNotNull(webElements, "webElements");
         this.selectorString = selectorString;
-        this.executionContext = executionContext;
-    }
-
-    public ElementCollectionImpl(@Nullable final String selectorString, final List<WebElement> webElements) {
-        this(selectorString, new ExecutionContext(), webElements);
+        this.findContext = new RightNow();
     }
 
     public ElementCollectionImpl(@Nullable final String selectorString, final WebElement... webElements) {
@@ -44,80 +37,132 @@ public class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public ElementCollection find(String cssSelector) {
-        return new ElementCollectionImpl(cssSelector, new ExecutionContext(), executeWithMultiple(new Find(cssSelector)));
-    }
-
-    private List<WebElement> executeWithMultiple(Function<List<WebElement>, ValidatableReturnValue<List<WebElement>>> operation) {
-        return executionContext.execute(operation, webElements);
+        final List<WebElement> foundElements = findContext.find(cssSelector, new WebElementFindFunction(webElements));
+        return new ElementCollectionImpl(cssSelector, foundElements);
     }
 
     @Override
     public ElementCollection click() {
-        return new ElementCollectionImpl(selectorString, new ExecutionContext(), executeWithMultiple(new Click()));
+        checkState(!webElements.isEmpty(), "Trying to click on non existing element.");
+        for (WebElement element : webElements) {
+            element.click();
+        }
+        return new ElementCollectionImpl(selectorString, webElements);
     }
 
     @Override
     public ElementCollection submit() {
-        return new ElementCollectionImpl(selectorString, new ExecutionContext(), executeWithMultiple(new Submit()));
+        checkState(!webElements.isEmpty(), "Trying to submit a non existing element.");
+        for (WebElement element : webElements) {
+            element.submit();
+        }
+        return new ElementCollectionImpl(selectorString, webElements);
     }
 
     @Override
     public ElementCollection get(final int index) {
-        return new ElementCollectionImpl(selectorString, new ExecutionContext(), executeWithMultiple(new Get(index, selectorString)));
+        try {
+            return new ElementCollectionImpl(selectorString, webElements.get(index));
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalStateException("Element collection selected with \"" + selectorString + "\" returned null for index:" + index, e);
+        }
     }
 
     @Override
     public ElementCollection first() {
-        return new ElementCollectionImpl(selectorString, new ExecutionContext(), executeWithMultiple(new First()));
+        try {
+            Preconditions.checkArgument(webElements.size() > 0);
+            return new ElementCollectionImpl(selectorString, Iterables.getFirst(webElements, null));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException("Element collection is empty", e);
+        }
     }
 
     @Override
     public ElementCollection last() {
-        return new ElementCollectionImpl(selectorString, new ExecutionContext(), executeWithMultiple(new Last()));
+        try {
+            Preconditions.checkArgument(webElements.size() > 0);
+            return new ElementCollectionImpl(selectorString, Iterables.getLast(webElements));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException("Element collection is empty", e);
+        }
     }
 
     @Override
     public ElementCollection val(final String value) {
-        return new ElementCollectionImpl(selectorString, new ExecutionContext(), executeWithMultiple(SetVal.forValue(value)));
+        final List<WebElement> elementsWithSetValue = SetVal.forValue(value).apply(webElements);
+        return new ElementCollectionImpl(selectorString, elementsWithSetValue);
     }
 
     @Override
     public ElementCollection valByIndex(final int index) {
-        return new ElementCollectionImpl(selectorString, new ExecutionContext(), executeWithMultiple(SetVal.forIndex(index)));
+        final List<WebElement> elementsWithSetValue = SetVal.forIndex(index).apply(webElements);
+        return new ElementCollectionImpl(selectorString, elementsWithSetValue);
     }
 
     @Override
     public ElementCollection valByVisibleText(final String text) {
-        return new ElementCollectionImpl(selectorString, new ExecutionContext(), executeWithMultiple(SetVal.forVisibleValue(text)));
+        final List<WebElement> elementsWithSetValue = SetVal.forVisibleValue(text).apply(webElements);
+        return new ElementCollectionImpl(selectorString, elementsWithSetValue);
     }
 
     @Override
     public String val() {
-        return executionContext.execute(new GetVal(), webElements);
+        final WebElement webElement = Iterables.getFirst(webElements, null);
+        return webElement != null ? webElement.getText() : null;
     }
 
     @Override
     public String attr(final String name) {
-        return executionContext.execute(new Attr(name), webElements);
+        final WebElement webElement = Iterables.getFirst(webElements, null);
+        return webElement != null ? webElement.getAttribute(name) : null;
     }
 
     @Override
     public ElementCollection val(final boolean value) {
-        return new ElementCollectionImpl(selectorString, new ExecutionContext(), executeWithMultiple(new SetBooleanVal(value)));
+        for (WebElement element : webElements) {
+            setValue(element, value);
+        }
+        return new ElementCollectionImpl(selectorString, webElements);
+    }
+
+    private void setValue(WebElement element, boolean value) {
+        checkArgument(isCheckbox(element) || isRadioButton(element) || isSelectOption(element),
+                "Boolean values can only be set to checkboxes, radio buttons and select options");
+
+        if (isSelectedButShouldBeDeselected(element, value) || isNotSelectedButShouldBeSelected(element, value)) {
+            element.click();
+        }
+    }
+
+    private boolean isNotSelectedButShouldBeSelected(WebElement element, boolean value) {
+        return !element.isSelected() && value;
+    }
+
+    private boolean isSelectedButShouldBeDeselected(WebElement element, boolean value) {
+        return element.isSelected() && !value;
     }
 
     @Override
     public List<ElementCollection> getElements() {
         List<ElementCollection> elements = Lists.newArrayList();
         for (WebElement webElement : webElements) {
-            elements.add(new ElementCollectionImpl(selectorString, new ExecutionContext(), Lists.newArrayList(webElement)));
+            elements.add(new ElementCollectionImpl(selectorString, Lists.newArrayList(webElement)));
         }
         return elements;
     }
 
     @Override
     public boolean isDisplayed() {
-        return executionContext.execute(new IsDisplayed(), webElements);
+        if (webElements.isEmpty()) {
+            return false;
+        }
+        for (WebElement webElement : webElements) {
+            if (!webElement.isDisplayed()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -131,8 +176,10 @@ public class ElementCollectionImpl implements ElementCollection {
     }
 
     @Override
-    public ElementCollection within(TimeUnit timeUnit) {
-        return new ElementCollectionImpl(selectorString, new ExecutionContextWithin(timeUnit), webElements);
+    public ElementCollectionFinder within(TimeUnit timeUnit) {
+        final ElementCollectionImpl elementCollection = new ElementCollectionImpl(selectorString, webElements);
+        elementCollection.findContext = new Delayed(timeUnit.inMilliseconds());
+        return elementCollection;
     }
 
 }

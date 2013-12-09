@@ -12,14 +12,8 @@ import java.util.List;
 @ParametersAreNonnullByDefault
 public class RightNow implements FindContext {
 
-    private final Function<String, List<WebElement>> findFunction;
-
-    public RightNow(Function<String, List<WebElement>> findFunction) {
-        this.findFunction = findFunction;
-    }
-
     @Override
-    public List<WebElement> find(String cssSelector) {
+    public List<WebElement> find(String cssSelector, Function<String, List<WebElement>> findFunction) {
         return findFunction.apply(cssSelector);
     }
 

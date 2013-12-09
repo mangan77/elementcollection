@@ -13,17 +13,15 @@ import java.util.List;
 @ParametersAreNonnullByDefault
 public class Delayed implements FindContext {
 
-    private final Function<String, List<WebElement>> findFunction;
     private final long endTime;
 
-    public Delayed(Function<String, List<WebElement>> findFunction, int delayInMillis) {
-        this.findFunction = findFunction;
+    public Delayed(int delayInMillis) {
         this.endTime = calculateEndTime(delayInMillis);
     }
 
 
     @Override
-    public List<WebElement> find(String cssSelector) {
+    public List<WebElement> find(String cssSelector, Function<String, List<WebElement>> findFunction) {
         RuntimeException thrownException = null;
         while (shouldTryAgain(endTime)) {
             try {
