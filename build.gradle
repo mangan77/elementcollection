@@ -1,8 +1,8 @@
 apply plugin: 'java'
 
-project.ext.set("title", "elementcollection")
 version = "0.1.0"
 sourceCompatibility = 1.6
+project.ext.set("title", "elementcollection")
 project.ext.set("vendor", "magnusgranander")
 project.ext.set("vendorUrl", "http://bitbucket.org/magnusgranander/elementcollection")
 
