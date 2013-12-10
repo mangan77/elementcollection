@@ -1,5 +1,11 @@
 apply plugin: 'java'
 
+version = "0.1.0"
+sourceCompatibility = 1.6
+project.ext.set("title", "elementcollection")
+project.ext.set("vendor", "magnusgranander")
+project.ext.set("vendorUrl", "http://bitbucket.org/magnusgranander/elementcollection")
+
 repositories {
     mavenCentral();
 }
@@ -8,4 +14,24 @@ dependencies {
     compile 'org.seleniumhq.selenium:selenium-java:2.35.0'
     compile 'com.google.code.findbugs:jsr305:2.0.2'
     compile 'com.google.guava:guava:14.0.1'
+
+    testCompile 'org.testng:testng:6.8.7'
+    testCompile 'org.mockito:mockito-core:1.9.5'
+    testCompile 'org.hamcrest:hamcrest-core:1.3'
+}
+
+jar {
+    manifest {
+        attributes(
+                "Manifest-Version": "1.0",
+                "Implementation-Title": project.title,
+                "Implementation-Version": version,
+                "Implementation-Vendor": vendor,
+                "Implementation-Url": vendorUrl,
+                "Build-Date": new Date().format('yyyy-MM-dd HH:mm:ss'),
+                "Build-Jdk": sourceCompatibility
+        );
+    }
+
+    destinationDir = file("releases")
 }

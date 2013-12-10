@@ -1,5 +1,7 @@
-package com.webelementcollection;
+package com.elementcollection.collection;
 
+
+import com.elementcollection.finder.ElementCollectionFinder;
 
 import java.util.List;
 
@@ -43,4 +45,5 @@ public interface ElementCollection extends ElementCollectionFinder {
     boolean isDisplayed();
 
     ElementCollection valByVisibleText(String text);
+
 }
