@@ -27,7 +27,8 @@ public class WebDriverElementCollectionFinder implements ElementCollectionFinder
         return ElementCollectionFactory.create(cssSelector, webElements);
     }
 
-    public WebDriverElementCollectionFinder within(TimeUnit delay) {
+    @Override
+    public ElementCollectionFinder within(TimeUnit delay) {
         this.findContext = new Delayed(delay);
         return this;
     }

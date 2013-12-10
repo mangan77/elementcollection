@@ -44,6 +44,4 @@ public interface ElementCollection extends ElementCollectionFinder {
 
     ElementCollection valByVisibleText(String text);
 
-    ElementCollectionFinder within(TimeUnit timeUnit);
-
 }

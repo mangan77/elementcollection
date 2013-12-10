@@ -7,4 +7,5 @@ public interface ElementCollectionFinder {
 
     ElementCollection find(String cssSelector);
 
+    ElementCollectionFinder within(TimeUnit delay);
 }
