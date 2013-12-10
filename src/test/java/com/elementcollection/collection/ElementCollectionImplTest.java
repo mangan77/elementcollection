@@ -1,6 +1,7 @@
 package com.elementcollection.collection;
 
 import com.elementcollection.WebElementMockBuilder;
+import com.elementcollection.context.FindContexts;
 import com.elementcollection.type.TimeUnit;
 import com.google.common.collect.Lists;
 import org.openqa.selenium.By;
@@ -333,7 +334,7 @@ public class ElementCollectionImplTest {
     }
 
     private ElementCollection elementCollection(WebElement... webElement) {
-        return new ElementCollectionImpl(null, Lists.newArrayList(webElement));
+        return new ElementCollectionImpl(FindContexts.immediate(), null, Lists.newArrayList(webElement));
     }
 
 }

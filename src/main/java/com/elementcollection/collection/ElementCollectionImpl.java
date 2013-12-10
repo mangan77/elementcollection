@@ -24,20 +24,20 @@ class ElementCollectionImpl implements ElementCollection {
     private final String selectorString;
     private FindContext findContext;
 
-    ElementCollectionImpl(@Nullable String selectorString, List<WebElement> webElements) {
+    ElementCollectionImpl(FindContext findContext, @Nullable String selectorString, List<WebElement> webElements) {
         this.webElements = checkNotNull(webElements, "webElements");
         this.selectorString = selectorString;
-        this.findContext = FindContexts.immediate();
+        this.findContext = findContext;
     }
 
     private ElementCollectionImpl(@Nullable final String selectorString, final WebElement... webElements) {
-        this(selectorString, Lists.newArrayList(checkNotNull(webElements)));
+        this(FindContexts.immediate(), selectorString, Lists.newArrayList(checkNotNull(webElements)));
     }
 
     @Override
     public ElementCollection find(String cssSelector) {
         final List<WebElement> foundElements = findContext.find(cssSelector, new WebElementFindFunction(webElements));
-        return new ElementCollectionImpl(cssSelector, foundElements);
+        return new ElementCollectionImpl(FindContexts.immediate(), cssSelector, foundElements);
     }
 
     @Override
@@ -46,7 +46,7 @@ class ElementCollectionImpl implements ElementCollection {
         for (WebElement element : webElements) {
             element.click();
         }
-        return new ElementCollectionImpl(selectorString, webElements);
+        return new ElementCollectionImpl(FindContexts.immediate(), selectorString, webElements);
     }
 
     @Override
@@ -55,7 +55,7 @@ class ElementCollectionImpl implements ElementCollection {
         for (WebElement element : webElements) {
             element.submit();
         }
-        return new ElementCollectionImpl(selectorString, webElements);
+        return new ElementCollectionImpl(FindContexts.immediate(), selectorString, webElements);
     }
 
     @Override
@@ -90,19 +90,19 @@ class ElementCollectionImpl implements ElementCollection {
     @Override
     public ElementCollection val(final String value) {
         final List<WebElement> elementsWithSetValue = SetVal.forValue(value).apply(webElements);
-        return new ElementCollectionImpl(selectorString, elementsWithSetValue);
+        return new ElementCollectionImpl(FindContexts.immediate(), selectorString, elementsWithSetValue);
     }
 
     @Override
     public ElementCollection valByIndex(final int index) {
         final List<WebElement> elementsWithSetValue = SetVal.forIndex(index).apply(webElements);
-        return new ElementCollectionImpl(selectorString, elementsWithSetValue);
+        return new ElementCollectionImpl(FindContexts.immediate(), selectorString, elementsWithSetValue);
     }
 
     @Override
     public ElementCollection valByVisibleText(final String text) {
         final List<WebElement> elementsWithSetValue = SetVal.forVisibleValue(text).apply(webElements);
-        return new ElementCollectionImpl(selectorString, elementsWithSetValue);
+        return new ElementCollectionImpl(FindContexts.immediate(), selectorString, elementsWithSetValue);
     }
 
     @Override
@@ -122,7 +122,7 @@ class ElementCollectionImpl implements ElementCollection {
         for (WebElement element : webElements) {
             setValue(element, value);
         }
-        return new ElementCollectionImpl(selectorString, webElements);
+        return new ElementCollectionImpl(FindContexts.immediate(), selectorString, webElements);
     }
 
     private void setValue(WebElement element, boolean value) {
@@ -146,7 +146,7 @@ class ElementCollectionImpl implements ElementCollection {
     public List<ElementCollection> getElements() {
         List<ElementCollection> elements = Lists.newArrayList();
         for (WebElement webElement : webElements) {
-            elements.add(new ElementCollectionImpl(selectorString, Lists.newArrayList(webElement)));
+            elements.add(new ElementCollectionImpl(FindContexts.immediate(), selectorString, Lists.newArrayList(webElement)));
         }
         return elements;
     }
@@ -176,9 +176,7 @@ class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public ElementCollectionFinder within(TimeUnit timeUnit) {
-        final ElementCollectionImpl elementCollection = new ElementCollectionImpl(selectorString, webElements);
-        elementCollection.findContext = FindContexts.delayed(timeUnit);
-        return elementCollection;
+        return new ElementCollectionImpl(FindContexts.delayed(timeUnit), selectorString, webElements);
     }
 
 }
