@@ -32,4 +32,6 @@ jar {
                 "Build-Jdk": sourceCompatibility
         );
     }
+
+    destinationDir = file("releases")
 }

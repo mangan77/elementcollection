@@ -64,7 +64,7 @@ public class ElementCollectionFinderImplTest {
                 webDriverThatAnswers(delayedAnswer(getReturnTime(500),
                         Lists.newArrayList(webElementOne, webElementTwo)));
 
-        ElementCollection elements = ElementCollectionFinders.fromWebDriver(webDriver).within(TimeUnit.millis(500)).find("someCssSelector");
+        ElementCollection elements = ElementCollectionFinders.fromWebDriver(webDriver).within(TimeUnit.millis(550)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
@@ -75,7 +75,7 @@ public class ElementCollectionFinderImplTest {
                 webDriverThatAnswers(delayedAnswer(getReturnTime(2500),
                         Lists.newArrayList(webElementOne, webElementTwo)));
 
-        ElementCollection elements = ElementCollectionFinders.fromWebDriver(webDriver).within(TimeUnit.millis(2500)).find("someCssSelector");
+        ElementCollection elements = ElementCollectionFinders.fromWebDriver(webDriver).within(TimeUnit.secs(3)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
