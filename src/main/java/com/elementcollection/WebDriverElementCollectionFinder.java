@@ -10,7 +10,7 @@ import java.util.List;
  * <br> User: Mangan <br> Date: 09/12/13
  */
 @ParametersAreNonnullByDefault
-public class WebDriverElementCollectionFinder {
+public class WebDriverElementCollectionFinder implements ElementCollectionFinder {
 
     private final WebDriver webDriver;
     private FindContext findContext;
@@ -20,14 +20,15 @@ public class WebDriverElementCollectionFinder {
         this.findContext = defaultFindContext();
     }
 
-    public List<WebElement> find(String cssSelector) {
+    @Override
+    public ElementCollection find(String cssSelector) {
         final List<WebElement> webElements = findContext.find(cssSelector, new WebDriverFindFunction(webDriver));
         findContext = defaultFindContext();
-        return webElements;
+        return ElementCollectionFactory.create(cssSelector, webElements);
     }
 
-    public WebDriverElementCollectionFinder within(int delayInMillis) {
-        this.findContext = new Delayed(delayInMillis);
+    public WebDriverElementCollectionFinder within(TimeUnit delay) {
+        this.findContext = new Delayed(delay);
         return this;
     }
 

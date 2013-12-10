@@ -178,7 +178,7 @@ public class ElementCollectionImpl implements ElementCollection {
     @Override
     public ElementCollectionFinder within(TimeUnit timeUnit) {
         final ElementCollectionImpl elementCollection = new ElementCollectionImpl(selectorString, webElements);
-        elementCollection.findContext = new Delayed(timeUnit.inMilliseconds());
+        elementCollection.findContext = new Delayed(timeUnit);
         return elementCollection;
     }
 

@@ -12,7 +12,6 @@ import org.testng.annotations.Test;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
@@ -37,10 +36,8 @@ public class WebDriverElementCollectionFinderTest {
 
         WebDriver webDriver = webDriverThatAnswers(answer);
 
-        List<WebElement> elements = new WebDriverElementCollectionFinder(webDriver).find("someCssSelector");
-        assertThat(elements.size(), is(2));
-        assertThat(elements, hasItem(webElementOne));
-        assertThat(elements, hasItem(webElementTwo));
+        ElementCollection elements = new WebDriverElementCollectionFinder(webDriver).find("someCssSelector");
+        assertThat(elements.length(), is(2));
     }
 
     @Test(expectedExceptions = NoSuchElementException.class)
@@ -65,10 +62,8 @@ public class WebDriverElementCollectionFinderTest {
                 webDriverThatAnswers(delayedAnswer(getReturnTime(500),
                         Lists.newArrayList(webElementOne, webElementTwo)));
 
-        List<WebElement> elements = new WebDriverElementCollectionFinder(webDriver).within(500).find("someCssSelector");
-        assertThat(elements.size(), is(2));
-        assertThat(elements, hasItem(webElementOne));
-        assertThat(elements, hasItem(webElementTwo));
+        ElementCollection elements = new WebDriverElementCollectionFinder(webDriver).within(TimeUnit.millis(500)).find("someCssSelector");
+        assertThat(elements.length(), is(2));
     }
 
     public void testFindingElementsThatAreOnlyFindableAfter2500MillisecondsShouldReturnExpectedElements() {
@@ -78,10 +73,8 @@ public class WebDriverElementCollectionFinderTest {
                 webDriverThatAnswers(delayedAnswer(getReturnTime(2500),
                         Lists.newArrayList(webElementOne, webElementTwo)));
 
-        List<WebElement> elements = new WebDriverElementCollectionFinder(webDriver).within(2500).find("someCssSelector");
-        assertThat(elements.size(), is(2));
-        assertThat(elements, hasItem(webElementOne));
-        assertThat(elements, hasItem(webElementTwo));
+        ElementCollection elements = new WebDriverElementCollectionFinder(webDriver).within(TimeUnit.millis(2500)).find("someCssSelector");
+        assertThat(elements.length(), is(2));
     }
 
     public void testFindingElementsThrowExceptionTheFirst3TimesShouldReturnExpectedElements() {
@@ -103,10 +96,8 @@ public class WebDriverElementCollectionFinderTest {
         final WebDriver webDriver =
                 webDriverThatAnswers(answer);
 
-        List<WebElement> elements = new WebDriverElementCollectionFinder(webDriver).within(2500).find("someCssSelector");
-        assertThat(elements.size(), is(2));
-        assertThat(elements, hasItem(webElementOne));
-        assertThat(elements, hasItem(webElementTwo));
+        ElementCollection elements = new WebDriverElementCollectionFinder(webDriver).within(TimeUnit.millis(2500)).find("someCssSelector");
+        assertThat(elements.length(), is(2));
     }
 
     private WebDriver webDriverThatAnswers(Answer<List<WebElement>> answer) {

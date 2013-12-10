@@ -15,8 +15,8 @@ public class Delayed implements FindContext {
 
     private final long endTime;
 
-    public Delayed(int delayInMillis) {
-        this.endTime = calculateEndTime(delayInMillis);
+    public Delayed(TimeUnit delay) {
+        this.endTime = calculateEndTime(delay);
     }
 
 
@@ -37,8 +37,8 @@ public class Delayed implements FindContext {
         return Lists.newArrayList();
     }
 
-    private long calculateEndTime(int delayInMillis) {
-        return System.currentTimeMillis() + delayInMillis;
+    private long calculateEndTime(TimeUnit delay) {
+        return System.currentTimeMillis() + delay.inMilliseconds();
     }
 
     private boolean shouldTryAgain(long endTime) {
