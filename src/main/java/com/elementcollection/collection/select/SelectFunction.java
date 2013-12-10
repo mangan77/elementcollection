@@ -1,4 +1,4 @@
-package com.elementcollection.collection.function.select;
+package com.elementcollection.collection.select;
 
 import com.google.common.base.Function;
 import org.openqa.selenium.WebElement;
@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
  * Date: 4/5/13
  * </pre>
  */
-public abstract class SelectFunction implements Function<WebElement, Boolean> {
+abstract class SelectFunction implements Function<WebElement, Boolean> {
 
     @Nullable
     @Override

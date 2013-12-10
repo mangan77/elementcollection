@@ -333,7 +333,7 @@ public class ElementCollectionImplTest {
     }
 
     private ElementCollection elementCollection(WebElement... webElement) {
-        return new ElementCollectionImpl(webElement);
+        return new ElementCollectionImpl(null, Lists.newArrayList(webElement));
     }
 
 }

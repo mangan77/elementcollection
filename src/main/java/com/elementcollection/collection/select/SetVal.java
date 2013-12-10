@@ -1,9 +1,5 @@
-package com.elementcollection.collection.function;
+package com.elementcollection.collection.select;
 
-import com.elementcollection.collection.function.select.SelectByIndex;
-import com.elementcollection.collection.function.select.SelectByValue;
-import com.elementcollection.collection.function.select.SelectByVisibleText;
-import com.elementcollection.collection.function.select.SelectFunction;
 import com.google.common.base.Function;
 import org.openqa.selenium.WebElement;
 

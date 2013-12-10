@@ -1,15 +1,15 @@
-package com.elementcollection.collection.function.select;
+package com.elementcollection.collection.select;
 
 import org.openqa.selenium.support.ui.Select;
 
 /**
  * <br> User: Mangan <br> Date: 02/11/13
  */
-public class SelectByValue extends SelectFunction {
+class SelectByValue extends SelectFunction {
 
     private final String value;
 
-    public SelectByValue(String value) {
+    SelectByValue(String value) {
         this.value = value;
     }
 

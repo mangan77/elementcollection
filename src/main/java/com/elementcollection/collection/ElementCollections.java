@@ -1,6 +1,5 @@
 package com.elementcollection.collection;
 
-import com.google.common.collect.Lists;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -10,13 +9,9 @@ import java.util.List;
  * <br> User: Mangan <br> Date: 21/11/13
  */
 @ParametersAreNonnullByDefault
-public final class ElementCollectionFactory {
+public final class ElementCollections {
 
-    private ElementCollectionFactory() {
-    }
-
-    public static ElementCollection create(WebElement... webElements) {
-        return create(Lists.newArrayList(webElements));
+    private ElementCollections() {
     }
 
     public static ElementCollection create(List<WebElement> webElements) {

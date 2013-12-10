@@ -1,6 +1,6 @@
 package com.elementcollection.collection;
 
-import com.elementcollection.collection.function.SetVal;
+import com.elementcollection.collection.select.SetVal;
 import com.elementcollection.context.FindContext;
 import com.elementcollection.context.FindDelayed;
 import com.elementcollection.context.FindRightNow;
@@ -19,24 +19,20 @@ import static com.elementcollection.util.ElementUtil.*;
 import static com.google.common.base.Preconditions.*;
 
 @ParametersAreNonnullByDefault
-public class ElementCollectionImpl implements ElementCollection {
+class ElementCollectionImpl implements ElementCollection {
 
     private final List<WebElement> webElements;
     private final String selectorString;
     private FindContext findContext;
 
-    public ElementCollectionImpl(@Nullable String selectorString, List<WebElement> webElements) {
+    ElementCollectionImpl(@Nullable String selectorString, List<WebElement> webElements) {
         this.webElements = checkNotNull(webElements, "webElements");
         this.selectorString = selectorString;
         this.findContext = new FindRightNow();
     }
 
-    public ElementCollectionImpl(@Nullable final String selectorString, final WebElement... webElements) {
+    private ElementCollectionImpl(@Nullable final String selectorString, final WebElement... webElements) {
         this(selectorString, Lists.newArrayList(checkNotNull(webElements)));
-    }
-
-    public ElementCollectionImpl(final WebElement... webElements) {
-        this(null, Lists.newArrayList(checkNotNull(webElements)));
     }
 
     @Override

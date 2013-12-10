@@ -1,7 +1,7 @@
 package com.elementcollection.finder;
 
 import com.elementcollection.collection.ElementCollection;
-import com.elementcollection.collection.ElementCollectionFactory;
+import com.elementcollection.collection.ElementCollections;
 import com.elementcollection.context.FindContext;
 import com.elementcollection.context.FindDelayed;
 import com.elementcollection.context.FindRightNow;
@@ -30,7 +30,7 @@ class ElementCollectionFinderImpl implements ElementCollectionFinder {
     public ElementCollection find(String cssSelector) {
         final List<WebElement> webElements = findContext.find(cssSelector, new WebDriverFindFunction(webDriver));
         findContext = defaultFindContext();
-        return ElementCollectionFactory.create(cssSelector, webElements);
+        return ElementCollections.create(cssSelector, webElements);
     }
 
     @Override

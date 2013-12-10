@@ -13,10 +13,10 @@ import java.util.List;
  * <br> User: Mangan <br> Date: 09/12/13
  */
 @ParametersAreNonnullByDefault
-public class WebElementFindFunction implements Function<String, List<WebElement>> {
+class WebElementFindFunction implements Function<String, List<WebElement>> {
     private final List<WebElement> elements;
 
-    public WebElementFindFunction(List<WebElement> elements) {
+    WebElementFindFunction(List<WebElement> elements) {
         this.elements = elements;
     }
 
