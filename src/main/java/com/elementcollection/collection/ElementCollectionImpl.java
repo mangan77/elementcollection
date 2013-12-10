@@ -1,7 +1,11 @@
-package com.elementcollection.impl;
+package com.elementcollection.collection;
 
-import com.elementcollection.*;
-import com.elementcollection.impl.context.function.SetVal;
+import com.elementcollection.collection.function.SetVal;
+import com.elementcollection.context.FindContext;
+import com.elementcollection.context.FindDelayed;
+import com.elementcollection.context.FindRightNow;
+import com.elementcollection.finder.ElementCollectionFinder;
+import com.elementcollection.type.TimeUnit;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -11,7 +15,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
-import static com.elementcollection.impl.util.ElementUtil.*;
+import static com.elementcollection.util.ElementUtil.*;
 import static com.google.common.base.Preconditions.*;
 
 @ParametersAreNonnullByDefault
@@ -24,7 +28,7 @@ public class ElementCollectionImpl implements ElementCollection {
     public ElementCollectionImpl(@Nullable String selectorString, List<WebElement> webElements) {
         this.webElements = checkNotNull(webElements, "webElements");
         this.selectorString = selectorString;
-        this.findContext = new RightNow();
+        this.findContext = new FindRightNow();
     }
 
     public ElementCollectionImpl(@Nullable final String selectorString, final WebElement... webElements) {
@@ -178,7 +182,7 @@ public class ElementCollectionImpl implements ElementCollection {
     @Override
     public ElementCollectionFinder within(TimeUnit timeUnit) {
         final ElementCollectionImpl elementCollection = new ElementCollectionImpl(selectorString, webElements);
-        elementCollection.findContext = new Delayed(timeUnit);
+        elementCollection.findContext = new FindDelayed(timeUnit);
         return elementCollection;
     }
 

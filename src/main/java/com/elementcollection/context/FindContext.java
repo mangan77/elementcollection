@@ -1,4 +1,4 @@
-package com.elementcollection;
+package com.elementcollection.context;
 
 import com.google.common.base.Function;
 import org.openqa.selenium.WebElement;

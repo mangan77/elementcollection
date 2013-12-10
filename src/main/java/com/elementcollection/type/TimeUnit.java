@@ -1,4 +1,4 @@
-package com.elementcollection;
+package com.elementcollection.type;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 

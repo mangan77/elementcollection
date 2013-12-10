@@ -1,5 +1,7 @@
-package com.elementcollection;
+package com.elementcollection.finder;
 
+import com.elementcollection.collection.ElementCollection;
+import com.elementcollection.type.TimeUnit;
 import com.google.common.collect.Lists;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -21,7 +23,7 @@ import static org.mockito.Mockito.when;
  * <br> User: Mangan <br> Date: 09/12/13
  */
 @Test(groups = "unit")
-public class WebDriverElementCollectionFinderTest {
+public class ElementCollectionFinderImplTest {
 
     public void testFindingElementsThatCanBeFoundWithoutDelayShouldReturnTheElementsAtOnce() {
         final WebElement webElementOne = mock(WebElement.class);
@@ -36,7 +38,7 @@ public class WebDriverElementCollectionFinderTest {
 
         WebDriver webDriver = webDriverThatAnswers(answer);
 
-        ElementCollection elements = new WebDriverElementCollectionFinder(webDriver).find("someCssSelector");
+        ElementCollection elements = new ElementCollectionFinderImpl(webDriver).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
@@ -51,7 +53,7 @@ public class WebDriverElementCollectionFinderTest {
 
         WebDriver webDriver = webDriverThatAnswers(answer);
 
-        new WebDriverElementCollectionFinder(webDriver).find("someCssSelector");
+        new ElementCollectionFinderImpl(webDriver).find("someCssSelector");
     }
 
 
@@ -62,7 +64,7 @@ public class WebDriverElementCollectionFinderTest {
                 webDriverThatAnswers(delayedAnswer(getReturnTime(500),
                         Lists.newArrayList(webElementOne, webElementTwo)));
 
-        ElementCollection elements = new WebDriverElementCollectionFinder(webDriver).within(TimeUnit.millis(500)).find("someCssSelector");
+        ElementCollection elements = new ElementCollectionFinderImpl(webDriver).within(TimeUnit.millis(500)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
@@ -73,7 +75,7 @@ public class WebDriverElementCollectionFinderTest {
                 webDriverThatAnswers(delayedAnswer(getReturnTime(2500),
                         Lists.newArrayList(webElementOne, webElementTwo)));
 
-        ElementCollection elements = new WebDriverElementCollectionFinder(webDriver).within(TimeUnit.millis(2500)).find("someCssSelector");
+        ElementCollection elements = new ElementCollectionFinderImpl(webDriver).within(TimeUnit.millis(2500)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
@@ -96,7 +98,7 @@ public class WebDriverElementCollectionFinderTest {
         final WebDriver webDriver =
                 webDriverThatAnswers(answer);
 
-        ElementCollection elements = new WebDriverElementCollectionFinder(webDriver).within(TimeUnit.millis(2500)).find("someCssSelector");
+        ElementCollection elements = new ElementCollectionFinderImpl(webDriver).within(TimeUnit.millis(2500)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 

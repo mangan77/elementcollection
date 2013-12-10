@@ -1,4 +1,4 @@
-package com.elementcollection.impl.context.function.select;
+package com.elementcollection.collection.function.select;
 
 import org.openqa.selenium.support.ui.Select;
 

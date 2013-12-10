@@ -1,4 +1,4 @@
-package com.elementcollection;
+package com.elementcollection.collection;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;

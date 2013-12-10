@@ -1,4 +1,4 @@
-package com.elementcollection;
+package com.elementcollection.finder;
 
 import com.google.common.base.Function;
 import org.openqa.selenium.By;

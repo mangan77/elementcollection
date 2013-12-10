@@ -1,5 +1,11 @@
-package com.elementcollection;
+package com.elementcollection.finder;
 
+import com.elementcollection.collection.ElementCollection;
+import com.elementcollection.collection.ElementCollectionFactory;
+import com.elementcollection.context.FindContext;
+import com.elementcollection.context.FindDelayed;
+import com.elementcollection.context.FindRightNow;
+import com.elementcollection.type.TimeUnit;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -10,12 +16,12 @@ import java.util.List;
  * <br> User: Mangan <br> Date: 09/12/13
  */
 @ParametersAreNonnullByDefault
-public class WebDriverElementCollectionFinder implements ElementCollectionFinder {
+class ElementCollectionFinderImpl implements ElementCollectionFinder {
 
     private final WebDriver webDriver;
     private FindContext findContext;
 
-    public WebDriverElementCollectionFinder(WebDriver webDriver) {
+    public ElementCollectionFinderImpl(WebDriver webDriver) {
         this.webDriver = webDriver;
         this.findContext = defaultFindContext();
     }
@@ -29,11 +35,11 @@ public class WebDriverElementCollectionFinder implements ElementCollectionFinder
 
     @Override
     public ElementCollectionFinder within(TimeUnit delay) {
-        this.findContext = new Delayed(delay);
+        this.findContext = new FindDelayed(delay);
         return this;
     }
 
-    private RightNow defaultFindContext() {
-        return new RightNow();
+    private FindRightNow defaultFindContext() {
+        return new FindRightNow();
     }
 }

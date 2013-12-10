@@ -1,4 +1,4 @@
-package com.elementcollection.impl.util;
+package com.elementcollection.util;
 
 import org.openqa.selenium.WebElement;
 

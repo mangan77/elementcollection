@@ -1,6 +1,5 @@
-package com.elementcollection;
+package com.elementcollection.collection;
 
-import com.elementcollection.impl.ElementCollectionImpl;
 import com.google.common.collect.Lists;
 import org.openqa.selenium.WebElement;
 

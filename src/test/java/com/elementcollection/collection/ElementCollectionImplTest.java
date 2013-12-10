@@ -1,6 +1,7 @@
-package com.elementcollection;
+package com.elementcollection.collection;
 
-import com.elementcollection.impl.ElementCollectionImpl;
+import com.elementcollection.WebElementMockBuilder;
+import com.elementcollection.type.TimeUnit;
 import com.google.common.collect.Lists;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

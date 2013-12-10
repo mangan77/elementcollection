@@ -1,5 +1,6 @@
-package com.elementcollection;
+package com.elementcollection.context;
 
+import com.elementcollection.type.TimeUnit;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.openqa.selenium.WebElement;
@@ -11,11 +12,11 @@ import java.util.List;
  * <br> User: Mangan <br> Date: 09/12/13
  */
 @ParametersAreNonnullByDefault
-public class Delayed implements FindContext {
+public class FindDelayed implements FindContext {
 
     private final long endTime;
 
-    public Delayed(TimeUnit delay) {
+    public FindDelayed(TimeUnit delay) {
         this.endTime = calculateEndTime(delay);
     }
 

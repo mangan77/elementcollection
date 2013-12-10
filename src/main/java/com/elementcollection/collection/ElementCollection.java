@@ -1,5 +1,7 @@
-package com.elementcollection;
+package com.elementcollection.collection;
 
+
+import com.elementcollection.finder.ElementCollectionFinder;
 
 import java.util.List;
 

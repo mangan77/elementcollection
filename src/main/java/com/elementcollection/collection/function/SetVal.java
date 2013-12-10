@@ -1,9 +1,9 @@
-package com.elementcollection.impl.context.function;
+package com.elementcollection.collection.function;
 
-import com.elementcollection.impl.context.function.select.SelectByIndex;
-import com.elementcollection.impl.context.function.select.SelectByValue;
-import com.elementcollection.impl.context.function.select.SelectByVisibleText;
-import com.elementcollection.impl.context.function.select.SelectFunction;
+import com.elementcollection.collection.function.select.SelectByIndex;
+import com.elementcollection.collection.function.select.SelectByValue;
+import com.elementcollection.collection.function.select.SelectByVisibleText;
+import com.elementcollection.collection.function.select.SelectFunction;
 import com.google.common.base.Function;
 import org.openqa.selenium.WebElement;
 
@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
-import static com.elementcollection.impl.util.ElementUtil.isSelectBox;
+import static com.elementcollection.util.ElementUtil.isSelectBox;
 import static com.google.common.base.Preconditions.checkState;
 
 /**
