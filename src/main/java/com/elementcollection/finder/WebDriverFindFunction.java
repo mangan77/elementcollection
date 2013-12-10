@@ -13,11 +13,11 @@ import java.util.List;
  * <br> User: Mangan <br> Date: 09/12/13
  */
 @ParametersAreNonnullByDefault
-public class WebDriverFindFunction implements Function<String, List<WebElement>> {
+class WebDriverFindFunction implements Function<String, List<WebElement>> {
 
     private final WebDriver webDriver;
 
-    public WebDriverFindFunction(WebDriver webDriver) {
+    WebDriverFindFunction(WebDriver webDriver) {
         this.webDriver = webDriver;
     }
 

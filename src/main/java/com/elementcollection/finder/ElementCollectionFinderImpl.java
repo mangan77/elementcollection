@@ -20,7 +20,7 @@ class ElementCollectionFinderImpl implements ElementCollectionFinder {
     private final WebDriver webDriver;
     private FindContext findContext;
 
-    public ElementCollectionFinderImpl(WebDriver webDriver) {
+    ElementCollectionFinderImpl(WebDriver webDriver) {
         this.webDriver = webDriver;
         this.findContext = defaultFindContext();
     }

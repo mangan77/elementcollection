@@ -38,7 +38,7 @@ public class ElementCollectionFinderImplTest {
 
         WebDriver webDriver = webDriverThatAnswers(answer);
 
-        ElementCollection elements = new ElementCollectionFinderImpl(webDriver).find("someCssSelector");
+        ElementCollection elements = ElementCollectionFinders.fromWebDriver(webDriver).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
@@ -53,7 +53,7 @@ public class ElementCollectionFinderImplTest {
 
         WebDriver webDriver = webDriverThatAnswers(answer);
 
-        new ElementCollectionFinderImpl(webDriver).find("someCssSelector");
+        ElementCollectionFinders.fromWebDriver(webDriver).find("someCssSelector");
     }
 
 
@@ -64,7 +64,7 @@ public class ElementCollectionFinderImplTest {
                 webDriverThatAnswers(delayedAnswer(getReturnTime(500),
                         Lists.newArrayList(webElementOne, webElementTwo)));
 
-        ElementCollection elements = new ElementCollectionFinderImpl(webDriver).within(TimeUnit.millis(500)).find("someCssSelector");
+        ElementCollection elements = ElementCollectionFinders.fromWebDriver(webDriver).within(TimeUnit.millis(500)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
@@ -75,7 +75,7 @@ public class ElementCollectionFinderImplTest {
                 webDriverThatAnswers(delayedAnswer(getReturnTime(2500),
                         Lists.newArrayList(webElementOne, webElementTwo)));
 
-        ElementCollection elements = new ElementCollectionFinderImpl(webDriver).within(TimeUnit.millis(2500)).find("someCssSelector");
+        ElementCollection elements = ElementCollectionFinders.fromWebDriver(webDriver).within(TimeUnit.millis(2500)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
@@ -98,7 +98,7 @@ public class ElementCollectionFinderImplTest {
         final WebDriver webDriver =
                 webDriverThatAnswers(answer);
 
-        ElementCollection elements = new ElementCollectionFinderImpl(webDriver).within(TimeUnit.millis(2500)).find("someCssSelector");
+        ElementCollection elements = ElementCollectionFinders.fromWebDriver(webDriver).within(TimeUnit.millis(2500)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
