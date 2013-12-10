@@ -12,11 +12,11 @@ import java.util.List;
  * <br> User: Mangan <br> Date: 09/12/13
  */
 @ParametersAreNonnullByDefault
-public class FindDelayed implements FindContext {
+class FindDelayed implements FindContext {
 
     private final long endTime;
 
-    public FindDelayed(TimeUnit delay) {
+    FindDelayed(TimeUnit delay) {
         this.endTime = calculateEndTime(delay);
     }
 

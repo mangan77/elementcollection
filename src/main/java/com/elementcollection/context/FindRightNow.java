@@ -10,7 +10,7 @@ import java.util.List;
  * <br> User: Mangan <br> Date: 09/12/13
  */
 @ParametersAreNonnullByDefault
-public class FindRightNow implements FindContext {
+class FindRightNow implements FindContext {
 
     @Override
     public List<WebElement> find(String cssSelector, Function<String, List<WebElement>> findFunction) {

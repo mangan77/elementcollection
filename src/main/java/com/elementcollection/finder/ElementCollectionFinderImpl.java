@@ -3,8 +3,7 @@ package com.elementcollection.finder;
 import com.elementcollection.collection.ElementCollection;
 import com.elementcollection.collection.ElementCollections;
 import com.elementcollection.context.FindContext;
-import com.elementcollection.context.FindDelayed;
-import com.elementcollection.context.FindRightNow;
+import com.elementcollection.context.FindContexts;
 import com.elementcollection.type.TimeUnit;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -35,11 +34,11 @@ class ElementCollectionFinderImpl implements ElementCollectionFinder {
 
     @Override
     public ElementCollectionFinder within(TimeUnit delay) {
-        this.findContext = new FindDelayed(delay);
+        this.findContext = FindContexts.delayed(delay);
         return this;
     }
 
-    private FindRightNow defaultFindContext() {
-        return new FindRightNow();
+    private FindContext defaultFindContext() {
+        return FindContexts.immediate();
     }
 }

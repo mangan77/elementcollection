@@ -2,8 +2,7 @@ package com.elementcollection.collection;
 
 import com.elementcollection.collection.select.SetVal;
 import com.elementcollection.context.FindContext;
-import com.elementcollection.context.FindDelayed;
-import com.elementcollection.context.FindRightNow;
+import com.elementcollection.context.FindContexts;
 import com.elementcollection.finder.ElementCollectionFinder;
 import com.elementcollection.type.TimeUnit;
 import com.google.common.base.Preconditions;
@@ -28,7 +27,7 @@ class ElementCollectionImpl implements ElementCollection {
     ElementCollectionImpl(@Nullable String selectorString, List<WebElement> webElements) {
         this.webElements = checkNotNull(webElements, "webElements");
         this.selectorString = selectorString;
-        this.findContext = new FindRightNow();
+        this.findContext = FindContexts.immediate();
     }
 
     private ElementCollectionImpl(@Nullable final String selectorString, final WebElement... webElements) {
@@ -178,7 +177,7 @@ class ElementCollectionImpl implements ElementCollection {
     @Override
     public ElementCollectionFinder within(TimeUnit timeUnit) {
         final ElementCollectionImpl elementCollection = new ElementCollectionImpl(selectorString, webElements);
-        elementCollection.findContext = new FindDelayed(timeUnit);
+        elementCollection.findContext = FindContexts.delayed(timeUnit);
         return elementCollection;
     }
 
