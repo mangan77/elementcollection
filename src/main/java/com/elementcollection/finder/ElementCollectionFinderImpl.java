@@ -11,6 +11,8 @@ import org.openqa.selenium.WebElement;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * <br> User: Mangan <br> Date: 09/12/13
  */
@@ -27,9 +29,12 @@ class ElementCollectionFinderImpl implements ElementCollectionFinder {
 
     @Override
     public ElementCollection find(String cssSelector) {
-        final List<WebElement> webElements = findContext.find(cssSelector, new WebDriverFindFunction(webDriver));
         findContext = defaultFindContext();
-        return ElementCollections.create(cssSelector, webElements);
+        return ElementCollections.create(cssSelector, findElements(cssSelector));
+    }
+
+    private List<WebElement> findElements(String cssSelector) {
+        return findContext.find(checkNotNull(cssSelector), new WebDriverFindFunction(webDriver));
     }
 
     @Override

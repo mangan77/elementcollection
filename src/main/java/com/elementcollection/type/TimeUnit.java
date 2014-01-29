@@ -1,5 +1,6 @@
 package com.elementcollection.type;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -8,8 +9,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public abstract class TimeUnit {
 
+    @Nonnull
     public abstract int inMilliseconds();
 
+    @Nonnull
     public static TimeUnit secs(final int seconds) {
         return new TimeUnit() {
             @Override
@@ -19,6 +22,7 @@ public abstract class TimeUnit {
         };
     }
 
+    @Nonnull
     public static TimeUnit millis(final int milliseconds) {
         return new TimeUnit() {
             @Override

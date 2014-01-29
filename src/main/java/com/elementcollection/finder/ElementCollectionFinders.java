@@ -2,6 +2,7 @@ package com.elementcollection.finder;
 
 import org.openqa.selenium.WebDriver;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -13,6 +14,7 @@ public final class ElementCollectionFinders {
     private ElementCollectionFinders() {
     }
 
+    @Nonnull
     public static ElementCollectionFinder fromWebDriver(WebDriver webDriver) {
         return new ElementCollectionFinderImpl(webDriver);
     }
