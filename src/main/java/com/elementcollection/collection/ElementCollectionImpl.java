@@ -179,4 +179,8 @@ class ElementCollectionImpl implements ElementCollection {
         return new ElementCollectionImpl(FindContexts.delayed(timeUnit), selectorString, webElements);
     }
 
+    @Override
+    public ElementCollectionFinder wait(TimeUnit delay) {
+        return new ElementCollectionImpl(FindContexts.waiting(delay), selectorString, webElements);
+    }
 }

@@ -20,4 +20,8 @@ public final class FindContexts {
     public static FindContext immediate() {
         return new FindRightNow();
     }
+
+    public static FindContext waiting(TimeUnit delay) {
+        return new WaitToFind(delay);
+    }
 }

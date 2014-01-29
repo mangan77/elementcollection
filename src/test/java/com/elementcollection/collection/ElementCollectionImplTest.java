@@ -1,13 +1,15 @@
 package com.elementcollection.collection;
 
 import com.elementcollection.WebElementMockBuilder;
+import com.elementcollection.collection.spy.ElementCollectionWithSpy;
+import com.elementcollection.collection.spy.MySpy;
 import com.elementcollection.context.FindContexts;
-import com.elementcollection.type.TimeUnit;
 import com.google.common.collect.Lists;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
+import static com.elementcollection.type.TimeUnit.secs;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
@@ -197,14 +199,24 @@ public class ElementCollectionImplTest {
         final WebElement child = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(), By.cssSelector("something")).build();
         final WebElement parent = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(child), By.cssSelector("something"), 2).build();
 
-        assertEquals(elementCollection(parent).within(TimeUnit.secs(3)).find("something").length(), 1);
+        assertEquals(elementCollection(parent).within(secs(3)).find("something").length(), 1);
     }
 
     public void testWithinShouldReturnNoElementsWhenTheyDoNotAppearBeforeTimeOut() {
         final WebElement child = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(), By.cssSelector("something")).build();
         final WebElement parent = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(child), By.cssSelector("something"), 3).build();
 
-        assertEquals(elementCollection(parent).within(TimeUnit.secs(2)).find("something").length(), 0);
+        ElementCollectionWithSpy elementCollectionWithSpy = elementCollection(parent);
+        assertEquals(elementCollectionWithSpy.within(secs(2)).find("something").length(), 0);
+        assertTrue(elementCollectionWithSpy.getSpy().get("find").size() > 1);
+    }
+
+    public void testWaitingBeforeFindShouldCallFindMethodAfterWaitTimeAndNotBefore() {
+        ElementCollectionWithSpy elementCollection = elementCollection(mock(WebElement.class));
+        elementCollection.wait(secs(2)).find("something");
+
+        assertEquals(elementCollection.getSpy().get("find").size(), 1);
+        assertTrue(elementCollection.getSpy().get("find").get(0).getDuration() > 1999l, "Duration : " + elementCollection.getSpy().get("find").get(0).getDuration() + " ms");
     }
 
     public void Setting_Integer_Value_To_A_Non_Select_Element_Should_Set_Value_To_Integer_Value() {
@@ -333,8 +345,8 @@ public class ElementCollectionImplTest {
         return elementCollection();
     }
 
-    private ElementCollection elementCollection(WebElement... webElement) {
-        return new ElementCollectionImpl(FindContexts.immediate(), null, Lists.newArrayList(webElement));
+    private ElementCollectionWithSpy elementCollection(WebElement... webElement) {
+        return new ElementCollectionWithSpy(new ElementCollectionImpl(FindContexts.immediate(), null, Lists.newArrayList(webElement)), new MySpy());
     }
 
 }

@@ -38,6 +38,12 @@ class ElementCollectionFinderImpl implements ElementCollectionFinder {
         return this;
     }
 
+    @Override
+    public ElementCollectionFinder wait(TimeUnit delay) {
+        findContext = FindContexts.waiting(delay);
+        return this;
+    }
+
     private FindContext defaultFindContext() {
         return FindContexts.immediate();
     }
