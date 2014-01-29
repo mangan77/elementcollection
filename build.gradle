@@ -33,17 +33,17 @@ jar {
         );
     }
 
-    destinationDir = file("releases")
+    destinationDir = file("releases/" + version)
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
-    destinationDir = file("releases")
+    destinationDir = file("releases/" + version)
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
-    destinationDir = file("releases")
+    destinationDir = file("releases/" + version)
 }
