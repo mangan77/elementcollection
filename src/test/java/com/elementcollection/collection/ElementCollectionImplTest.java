@@ -339,6 +339,15 @@ public class ElementCollectionImplTest {
         assertFalse(elementCollection(one).isEmpty());
     }
 
+    public void When_No_Elements_In_Collection_Has_Elements_Should_Return_False() throws Exception {
+        assertFalse(emptyElementCollection().hasElements());
+    }
+
+    public void When_Elements_In_Collection_Has_Elements_Should_Return_True() throws Exception {
+        final WebElement one = new WebElementMockBuilder().build();
+        assertTrue(elementCollection(one).hasElements());
+    }
+
     public void Length_Is_Zero_When_No_Elements_In_Collection() throws Exception {
         assertEquals(emptyElementCollection().length(), 0);
     }

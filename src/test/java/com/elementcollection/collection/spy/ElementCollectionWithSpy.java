@@ -85,6 +85,11 @@ public class ElementCollectionWithSpy extends ElementCollectionFinderWithSpy imp
     }
 
     @Override
+    public boolean hasElements() {
+        return castDelegate().hasElements();
+    }
+
+    @Override
     public ElementCollection valByIndex(int index) {
         return castDelegate().valByIndex(index);
     }

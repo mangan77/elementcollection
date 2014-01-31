@@ -175,6 +175,11 @@ class ElementCollectionImpl implements ElementCollection {
     }
 
     @Override
+    public boolean hasElements() {
+        return length() > 0;
+    }
+
+    @Override
     public ElementCollection val(final int value) {
         return val(String.valueOf(value));
     }
