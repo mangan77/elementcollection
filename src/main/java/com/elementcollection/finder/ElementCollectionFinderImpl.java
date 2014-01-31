@@ -20,16 +20,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
 class ElementCollectionFinderImpl implements ElementCollectionFinder {
 
     private final WebDriver webDriver;
-    private FindContext findContext;
+    private final FindContext findContext;
 
     ElementCollectionFinderImpl(WebDriver webDriver) {
+        this(webDriver, FindContexts.immediate());
+    }
+
+    private ElementCollectionFinderImpl(WebDriver webDriver, FindContext findContext) {
         this.webDriver = webDriver;
-        this.findContext = defaultFindContext();
+        this.findContext = findContext;
     }
 
     @Override
     public ElementCollection find(String cssSelector) {
-        findContext = defaultFindContext();
         return ElementCollections.create(cssSelector, findElements(cssSelector));
     }
 
@@ -39,17 +42,12 @@ class ElementCollectionFinderImpl implements ElementCollectionFinder {
 
     @Override
     public ElementCollectionFinder within(TimeUnit delay) {
-        this.findContext = FindContexts.delayed(delay);
-        return this;
+        return new ElementCollectionFinderImpl(webDriver, FindContexts.delayed(delay));
     }
 
     @Override
     public ElementCollectionFinder wait(TimeUnit delay) {
-        findContext = FindContexts.waiting(delay);
-        return this;
+        return new ElementCollectionFinderImpl(webDriver, FindContexts.waiting(delay));
     }
 
-    private FindContext defaultFindContext() {
-        return FindContexts.immediate();
-    }
 }
