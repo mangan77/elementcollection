@@ -1,3 +1,10 @@
+0.2.1
+# Fixing major bug in ElementCollectionFinder implementation that prevented caused within() to return immediately
+
+0.2.0
+# Adding isEmpty()
+# Adding hasElements()
+
 0.1.2
 # Added wait() method to delay execution
 # Annotations for parameters and return values
