@@ -80,6 +80,11 @@ public class ElementCollectionWithSpy extends ElementCollectionFinderWithSpy imp
     }
 
     @Override
+    public boolean isEmpty() {
+        return castDelegate().isEmpty();
+    }
+
+    @Override
     public ElementCollection valByIndex(int index) {
         return castDelegate().valByIndex(index);
     }

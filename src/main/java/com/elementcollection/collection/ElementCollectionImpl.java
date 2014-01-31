@@ -170,6 +170,11 @@ class ElementCollectionImpl implements ElementCollection {
     }
 
     @Override
+    public boolean isEmpty() {
+        return length() == 0;
+    }
+
+    @Override
     public ElementCollection val(final int value) {
         return val(String.valueOf(value));
     }

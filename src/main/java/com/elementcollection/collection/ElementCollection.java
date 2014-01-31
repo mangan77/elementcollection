@@ -63,4 +63,5 @@ public interface ElementCollection extends ElementCollectionFinder {
     @Nonnull
     ElementCollection valByVisibleText(String text);
 
+    boolean isEmpty();
 }

@@ -20,11 +20,11 @@ import static org.testng.Assert.*;
 public class ElementCollectionImplTest {
 
 
-    public void testGetElementsOnEmptyCollectionShouldReturnEmptyCollection() {
+    public void Get_Elements_On_Empty_Collection_Should_Return_Empty_Collection() {
         assertEquals(emptyElementCollection().getElements().size(), 0);
     }
 
-    public void testGetElementsOnNonEmptyCollectionShouldReturnTheCorrectNumberOfElements() {
+    public void Get_Elements_On_Non_Empty_Collection_Should_Return_The_Correct_Number_Of_Elements() {
         final ElementCollection elementCollection = elementCollection(
                 new WebElementMockBuilder().build(),
                 new WebElementMockBuilder().build(),
@@ -195,23 +195,22 @@ public class ElementCollectionImplTest {
         assertEquals(elementCollection(one, two, three).find("something").length(), 1);
     }
 
-    public void testWithinShouldReturnElementsWhenTheyGetFound() {
+    public void Within_Should_Return_Elements_When_They_Get_Found() {
         final WebElement child = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(), By.cssSelector("something")).build();
         final WebElement parent = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(child), By.cssSelector("something"), 2).build();
 
         assertEquals(elementCollection(parent).within(secs(3)).find("something").length(), 1);
     }
 
-    public void testWithinShouldReturnNoElementsWhenTheyDoNotAppearBeforeTimeOut() {
+    public void Within_Should_Return_No_Elements_When_They_Do_Not_Appear_Before_Time_Out() {
         final WebElement child = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(), By.cssSelector("something")).build();
         final WebElement parent = new WebElementMockBuilder().finds(Lists.<WebElement>newArrayList(child), By.cssSelector("something"), 3).build();
 
         ElementCollectionWithSpy elementCollectionWithSpy = elementCollection(parent);
         assertEquals(elementCollectionWithSpy.within(secs(2)).find("something").length(), 0);
-        assertTrue(elementCollectionWithSpy.getSpy().get("find").size() > 1);
     }
 
-    public void testWaitingBeforeFindShouldCallFindMethodAfterWaitTimeAndNotBefore() {
+    public void Waiting_Before_Find_Should_Call_Find_Method_After_Wait_Time_And_Not_Before() {
         ElementCollectionWithSpy elementCollection = elementCollection(mock(WebElement.class));
         elementCollection.wait(secs(2)).find("something");
 
@@ -328,6 +327,16 @@ public class ElementCollectionImplTest {
         final WebElement two = new WebElementMockBuilder().isDisplayed(true).build();
 
         assertTrue(elementCollection(one, two).isDisplayed());
+    }
+
+    public void When_No_Elements_In_Collection_Is_Empty_Should_Return_True() throws Exception {
+        assertTrue(emptyElementCollection().isEmpty());
+    }
+
+    public void When_Elements_In_Collection_Is_Empty_Should_Return_False() throws Exception {
+        final WebElement one = new WebElementMockBuilder().build();
+
+        assertFalse(elementCollection(one).isEmpty());
     }
 
     public void Length_Is_Zero_When_No_Elements_In_Collection() throws Exception {
