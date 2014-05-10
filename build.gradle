@@ -11,11 +11,11 @@ repositories {
 }
 
 dependencies {
-    compile 'org.seleniumhq.selenium:selenium-java:2.35.0'
-    compile 'com.google.code.findbugs:jsr305:2.0.2'
-    compile 'com.google.guava:guava:14.0.1'
+    compile 'org.seleniumhq.selenium:selenium-java:2.41.0'
+    compile 'com.google.code.findbugs:jsr305:2.0.3'
+    compile 'com.google.guava:guava:17.0'
 
-    testCompile 'org.testng:testng:6.8.7'
+    testCompile 'org.testng:testng:6.8.8'
     testCompile 'org.mockito:mockito-core:1.9.5'
     testCompile 'org.hamcrest:hamcrest-core:1.3'
 }
