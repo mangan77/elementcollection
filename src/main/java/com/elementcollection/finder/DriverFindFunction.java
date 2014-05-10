@@ -1,8 +1,7 @@
 package com.elementcollection.finder;
 
+import com.elementcollection.driver.Driver;
 import com.google.common.base.Function;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nullable;
@@ -13,17 +12,17 @@ import java.util.List;
  * <br> User: Mangan <br> Date: 09/12/13
  */
 @ParametersAreNonnullByDefault
-class WebDriverFindFunction implements Function<String, List<WebElement>> {
+class DriverFindFunction implements Function<String, List<WebElement>> {
 
-    private final WebDriver webDriver;
+    private final Driver driver;
 
-    WebDriverFindFunction(WebDriver webDriver) {
-        this.webDriver = webDriver;
+    DriverFindFunction(Driver driver) {
+        this.driver = driver;
     }
 
     @Nullable
     @Override
     public List<WebElement> apply(@Nullable String input) {
-        return webDriver.findElements(By.cssSelector(input));
+        return driver.findElements(input);
     }
 }

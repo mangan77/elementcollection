@@ -4,8 +4,8 @@ import com.elementcollection.collection.ElementCollection;
 import com.elementcollection.collection.ElementCollections;
 import com.elementcollection.context.FindContext;
 import com.elementcollection.context.FindContexts;
+import com.elementcollection.driver.Driver;
 import com.elementcollection.type.TimeUnit;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -19,15 +19,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @ParametersAreNonnullByDefault
 class ElementCollectionFinderImpl implements ElementCollectionFinder {
 
-    private final WebDriver webDriver;
+    private final Driver driver;
     private final FindContext findContext;
 
-    ElementCollectionFinderImpl(WebDriver webDriver) {
-        this(webDriver, FindContexts.immediate());
+    ElementCollectionFinderImpl(Driver driver) {
+        this(driver, FindContexts.immediate());
     }
 
-    private ElementCollectionFinderImpl(WebDriver webDriver, FindContext findContext) {
-        this.webDriver = webDriver;
+    private ElementCollectionFinderImpl(Driver driver, FindContext findContext) {
+        this.driver = driver;
         this.findContext = findContext;
     }
 
@@ -37,17 +37,17 @@ class ElementCollectionFinderImpl implements ElementCollectionFinder {
     }
 
     private List<WebElement> findElements(String cssSelector) {
-        return findContext.find(checkNotNull(cssSelector), new WebDriverFindFunction(webDriver));
+        return findContext.find(checkNotNull(cssSelector), new DriverFindFunction(driver));
     }
 
     @Override
     public ElementCollectionFinder within(TimeUnit delay) {
-        return new ElementCollectionFinderImpl(webDriver, FindContexts.delayed(delay));
+        return new ElementCollectionFinderImpl(driver, FindContexts.delayed(delay));
     }
 
     @Override
     public ElementCollectionFinder wait(TimeUnit delay) {
-        return new ElementCollectionFinderImpl(webDriver, FindContexts.waiting(delay));
+        return new ElementCollectionFinderImpl(driver, FindContexts.waiting(delay));
     }
 
 }

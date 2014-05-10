@@ -1,6 +1,6 @@
 package com.elementcollection.finder;
 
-import org.openqa.selenium.WebDriver;
+import com.elementcollection.driver.Driver;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -15,7 +15,8 @@ public final class ElementCollectionFinders {
     }
 
     @Nonnull
-    public static ElementCollectionFinder fromWebDriver(WebDriver webDriver) {
-        return new ElementCollectionFinderImpl(webDriver);
+    public static ElementCollectionFinder create(Driver driver) {
+        return new ElementCollectionFinderImpl(driver);
     }
+
 }

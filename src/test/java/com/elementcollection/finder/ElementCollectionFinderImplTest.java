@@ -1,13 +1,12 @@
 package com.elementcollection.finder;
 
 import com.elementcollection.collection.ElementCollection;
+import com.elementcollection.driver.Driver;
 import com.elementcollection.type.TimeUnit;
 import com.google.common.collect.Lists;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
@@ -36,9 +35,7 @@ public class ElementCollectionFinderImplTest {
             }
         };
 
-        WebDriver webDriver = webDriverThatAnswers(answer);
-
-        ElementCollection elements = ElementCollectionFinders.fromWebDriver(webDriver).find("someCssSelector");
+        ElementCollection elements = ElementCollectionFinders.create(driverThatAnswers(answer)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
@@ -51,31 +48,29 @@ public class ElementCollectionFinderImplTest {
             }
         };
 
-        WebDriver webDriver = webDriverThatAnswers(answer);
-
-        ElementCollectionFinders.fromWebDriver(webDriver).find("someCssSelector");
+        ElementCollectionFinders.create(driverThatAnswers(answer)).find("someCssSelector");
     }
 
 
     public void testFindingElementsThatAreOnlyFindableAfter500MillisecondsShouldReturnExpectedElements() {
         final WebElement webElementOne = mock(WebElement.class);
         final WebElement webElementTwo = mock(WebElement.class);
-        final WebDriver webDriver =
-                webDriverThatAnswers(delayedAnswer(getReturnTime(500),
+        final Driver webDriver =
+                driverThatAnswers(delayedAnswer(getReturnTime(500),
                         Lists.newArrayList(webElementOne, webElementTwo)));
 
-        ElementCollection elements = ElementCollectionFinders.fromWebDriver(webDriver).within(TimeUnit.millis(550)).find("someCssSelector");
+        ElementCollection elements = ElementCollectionFinders.create(webDriver).within(TimeUnit.millis(550)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
     public void testFindingElementsThatAreOnlyFindableAfter2500MillisecondsShouldReturnExpectedElements() {
         final WebElement webElementOne = mock(WebElement.class);
         final WebElement webElementTwo = mock(WebElement.class);
-        final WebDriver webDriver =
-                webDriverThatAnswers(delayedAnswer(getReturnTime(2500),
+        final Driver webDriver =
+                driverThatAnswers(delayedAnswer(getReturnTime(2500),
                         Lists.newArrayList(webElementOne, webElementTwo)));
 
-        ElementCollection elements = ElementCollectionFinders.fromWebDriver(webDriver).within(TimeUnit.secs(3)).find("someCssSelector");
+        ElementCollection elements = ElementCollectionFinders.create(webDriver).within(TimeUnit.secs(3)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
@@ -95,19 +90,16 @@ public class ElementCollectionFinderImplTest {
             }
         };
 
-        final WebDriver webDriver =
-                webDriverThatAnswers(answer);
-
-        ElementCollection elements = ElementCollectionFinders.fromWebDriver(webDriver).within(TimeUnit.millis(2500)).find("someCssSelector");
+        ElementCollection elements = ElementCollectionFinders.create(driverThatAnswers(answer)).within(TimeUnit.millis(2500)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
-    private WebDriver webDriverThatAnswers(Answer<List<WebElement>> answer) {
-        final WebDriver webDriver = mock(WebDriver.class);
-        when(webDriver
-                .findElements(By.cssSelector("someCssSelector")))
+    private Driver driverThatAnswers(Answer<List<WebElement>> answer) {
+        final Driver driver = mock(Driver.class);
+        when(driver
+                .findElements("someCssSelector"))
                 .thenAnswer(answer);
-        return webDriver;
+        return driver;
     }
 
     private static long getReturnTime(int delayInMillis) {
