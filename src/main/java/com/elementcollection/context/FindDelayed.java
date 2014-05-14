@@ -1,9 +1,9 @@
 package com.elementcollection.context;
 
+import com.elementcollection.element.Element;
 import com.elementcollection.type.TimeUnit;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import org.openqa.selenium.WebElement;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -22,11 +22,11 @@ class FindDelayed implements FindContext {
 
 
     @Override
-    public List<WebElement> find(String cssSelector, Function<String, List<WebElement>> findFunction) {
+    public List<Element> find(String cssSelector, Function<String, List<Element>> findFunction) {
         RuntimeException thrownException = null;
         while (shouldTryAgain(endTime)) {
             try {
-                final List<WebElement> elements = findFunction.apply(cssSelector);
+                final List<Element> elements = findFunction.apply(cssSelector);
                 if (elements.size() > 0) {
                     return elements;
                 }

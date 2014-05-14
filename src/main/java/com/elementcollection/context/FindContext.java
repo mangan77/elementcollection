@@ -1,7 +1,7 @@
 package com.elementcollection.context;
 
+import com.elementcollection.element.Element;
 import com.google.common.base.Function;
-import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -17,5 +17,5 @@ import java.util.List;
 public interface FindContext {
 
     @Nonnull
-    List<WebElement> find(String cssSelector, Function<String, List<WebElement>> findFunction);
+    List<Element> find(String cssSelector, Function<String, List<Element>> findFunction);
 }

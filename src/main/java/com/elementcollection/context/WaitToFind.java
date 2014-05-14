@@ -1,8 +1,8 @@
 package com.elementcollection.context;
 
+import com.elementcollection.element.Element;
 import com.elementcollection.type.TimeUnit;
 import com.google.common.base.Function;
-import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class WaitToFind implements FindContext {
     }
 
     @Override
-    public List<WebElement> find(String cssSelector, Function<String, List<WebElement>> findFunction) {
+    public List<Element> find(String cssSelector, Function<String, List<Element>> findFunction) {
         try {
             Thread.sleep(delay.inMilliseconds());
             return findFunction.apply(cssSelector);

@@ -5,8 +5,8 @@ import com.elementcollection.collection.ElementCollections;
 import com.elementcollection.context.FindContext;
 import com.elementcollection.context.FindContexts;
 import com.elementcollection.driver.Driver;
+import com.elementcollection.element.Element;
 import com.elementcollection.type.TimeUnit;
-import org.openqa.selenium.WebElement;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -36,7 +36,7 @@ class ElementCollectionFinderImpl implements ElementCollectionFinder {
         return ElementCollections.create(cssSelector, findElements(cssSelector));
     }
 
-    private List<WebElement> findElements(String cssSelector) {
+    private List<Element> findElements(String cssSelector) {
         return findContext.find(checkNotNull(cssSelector), new DriverFindFunction(driver));
     }
 

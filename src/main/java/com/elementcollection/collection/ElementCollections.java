@@ -1,7 +1,7 @@
 package com.elementcollection.collection;
 
 import com.elementcollection.context.FindContexts;
-import org.openqa.selenium.WebElement;
+import com.elementcollection.element.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -17,12 +17,7 @@ public final class ElementCollections {
     }
 
     @Nonnull
-    public static ElementCollection create(List<WebElement> webElements) {
-        return create(null, webElements);
-    }
-
-    @Nonnull
-    public static ElementCollection create(String cssSelector, List<WebElement> webElements) {
+    public static ElementCollection create(String cssSelector, List<Element> webElements) {
         return new ElementCollectionImpl(FindContexts.immediate(), cssSelector, webElements);
     }
 }

@@ -1,5 +1,7 @@
 package com.elementcollection.collection.select;
 
+import com.elementcollection.element.Element;
+import com.elementcollection.element.Elements;
 import com.google.common.base.Function;
 import org.openqa.selenium.WebElement;
 
@@ -40,7 +42,7 @@ public class SetVal implements Function<List<WebElement>, List<WebElement>> {
     @Override
     public List<WebElement> apply(@Nullable List<WebElement> input) {
         checkState(input.size() > 0, "Trying to set text:\"" + value + "\" on empty collection.");
-        for (WebElement element : input) {
+        for (Element element : Elements.fromWebElements(input)) {
             if (isSelectBox(element)) {
                 selectFunction.apply(element);
             } else {

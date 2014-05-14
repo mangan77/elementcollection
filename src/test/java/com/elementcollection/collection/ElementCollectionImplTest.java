@@ -4,6 +4,7 @@ import com.elementcollection.WebElementMockBuilder;
 import com.elementcollection.collection.spy.ElementCollectionWithSpy;
 import com.elementcollection.collection.spy.MySpy;
 import com.elementcollection.context.FindContexts;
+import com.elementcollection.element.Elements;
 import com.google.common.collect.Lists;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -364,7 +365,7 @@ public class ElementCollectionImplTest {
     }
 
     private ElementCollectionWithSpy elementCollection(WebElement... webElement) {
-        return new ElementCollectionWithSpy(new ElementCollectionImpl(FindContexts.immediate(), null, Lists.newArrayList(webElement)), new MySpy());
+        return new ElementCollectionWithSpy(new ElementCollectionImpl(FindContexts.immediate(), null, Elements.fromWebElements(Lists.newArrayList(webElement))), new MySpy());
     }
 
 }
