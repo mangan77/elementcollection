@@ -14,8 +14,6 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
-import static com.elementcollection.element.Elements.fromWebElements;
-import static com.elementcollection.element.Elements.toWebElements;
 import static com.elementcollection.util.ElementUtil.*;
 import static com.google.common.base.Preconditions.*;
 
@@ -91,19 +89,19 @@ class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public ElementCollection val(final String value) {
-        final List<Element> elementsWithSetValue = fromWebElements(SetVal.forValue(value).apply(toWebElements(elements)));
+        final List<Element> elementsWithSetValue = SetVal.forValue(value).apply(elements);
         return new ElementCollectionImpl(FindContexts.immediate(), selectorString, elementsWithSetValue);
     }
 
     @Override
     public ElementCollection valByIndex(final int index) {
-        final List<Element> elementsWithSetValue = fromWebElements(SetVal.forIndex(index).apply(toWebElements(elements)));
+        final List<Element> elementsWithSetValue = SetVal.forIndex(index).apply(elements);
         return new ElementCollectionImpl(FindContexts.immediate(), selectorString, elementsWithSetValue);
     }
 
     @Override
     public ElementCollection valByVisibleText(final String text) {
-        final List<Element> elementsWithSetValue = fromWebElements(SetVal.forVisibleValue(text).apply(toWebElements(elements)));
+        final List<Element> elementsWithSetValue = SetVal.forVisibleValue(text).apply(elements);
         return new ElementCollectionImpl(FindContexts.immediate(), selectorString, elementsWithSetValue);
     }
 

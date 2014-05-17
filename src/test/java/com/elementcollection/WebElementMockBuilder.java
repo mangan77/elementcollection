@@ -1,5 +1,6 @@
 package com.elementcollection;
 
+import com.elementcollection.element.Element;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.openqa.selenium.By;
@@ -18,10 +19,10 @@ import static org.mockito.Mockito.when;
 @ParametersAreNonnullByDefault
 public class WebElementMockBuilder {
 
-    private final WebElement mock;
+    private final Element mock;
 
     public WebElementMockBuilder() {
-        mock = mock(WebElement.class);
+        mock = mock(Element.class);
     }
 
     public WebElement build() {

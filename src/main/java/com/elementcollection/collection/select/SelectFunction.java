@@ -1,8 +1,8 @@
 package com.elementcollection.collection.select;
 
+import com.elementcollection.element.Element;
+import com.elementcollection.element.SelectElement;
 import com.google.common.base.Function;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
 
 import javax.annotation.Nullable;
 
@@ -12,15 +12,15 @@ import javax.annotation.Nullable;
  * Date: 4/5/13
  * </pre>
  */
-abstract class SelectFunction implements Function<WebElement, Boolean> {
+abstract class SelectFunction implements Function<Element, Boolean> {
 
     @Nullable
     @Override
-    public Boolean apply(@Nullable final WebElement element) {
-        doSelect(new Select(element));
+    public Boolean apply(@Nullable final Element element) {
+        doSelect(element.asSelect());
         return true;
     }
 
-    abstract void doSelect(final Select select);
+    abstract void doSelect(final SelectElement select);
 
 }

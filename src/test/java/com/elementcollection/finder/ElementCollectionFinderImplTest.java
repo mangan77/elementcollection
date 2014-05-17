@@ -63,17 +63,6 @@ public class ElementCollectionFinderImplTest {
         assertThat(elements.length(), is(2));
     }
 
-    public void testFindingElementsThatAreOnlyFindableAfter2500MillisecondsShouldReturnExpectedElements() {
-        final WebElement webElementOne = mock(WebElement.class);
-        final WebElement webElementTwo = mock(WebElement.class);
-        final Driver webDriver =
-                driverThatAnswers(delayedAnswer(getReturnTime(2500),
-                        Lists.newArrayList(webElementOne, webElementTwo)));
-
-        ElementCollection elements = ElementCollectionFinders.create(webDriver).within(TimeUnit.secs(3)).find("someCssSelector");
-        assertThat(elements.length(), is(2));
-    }
-
     public void testFindingElementsThrowExceptionTheFirst3TimesShouldReturnExpectedElements() {
         final WebElement webElementOne = mock(WebElement.class);
         final WebElement webElementTwo = mock(WebElement.class);

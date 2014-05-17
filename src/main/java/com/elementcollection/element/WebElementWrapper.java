@@ -94,4 +94,9 @@ public class WebElementWrapper implements Element {
     public String getCssValue(String propertyName) {
         return webElement.getCssValue(propertyName);
     }
+
+    @Override
+    public SelectElement asSelect() {
+        return new SelectElementWrapper(webElement);
+    }
 }

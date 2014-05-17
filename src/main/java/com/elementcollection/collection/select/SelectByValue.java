@@ -1,6 +1,6 @@
 package com.elementcollection.collection.select;
 
-import org.openqa.selenium.support.ui.Select;
+import com.elementcollection.element.SelectElement;
 
 /**
  * <br> User: Mangan <br> Date: 02/11/13
@@ -14,7 +14,7 @@ class SelectByValue extends SelectFunction {
     }
 
     @Override
-    void doSelect(final Select select) {
+    void doSelect(final SelectElement select) {
         select.selectByValue(value);
     }
 }
