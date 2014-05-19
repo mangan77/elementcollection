@@ -1,6 +1,7 @@
 package com.elementcollection;
 
 import com.elementcollection.element.Element;
+import com.elementcollection.element.SelectElement;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -21,6 +22,7 @@ public class ElementMockBuilder {
 
     public ElementMockBuilder() {
         mock = mock(Element.class);
+        when(mock.asSelect()).thenReturn(new SelectElementMock(mock));
     }
 
     public Element build() {
@@ -52,7 +54,7 @@ public class ElementMockBuilder {
         when(mock.isDisplayed()).thenAnswer(new Answer<Boolean>() {
             @Override
             public Boolean answer(InvocationOnMock invocation) throws Throwable {
-                while (whenToDisplay - System.currentTimeMillis() > 0){
+                while (whenToDisplay - System.currentTimeMillis() > 0) {
                     return false;
                 }
                 return true;
@@ -66,7 +68,7 @@ public class ElementMockBuilder {
         when(mock.findElements(cssSelector)).thenAnswer(new Answer<List<Element>>() {
             @Override
             public List<Element> answer(InvocationOnMock invocation) throws Throwable {
-                while (whenToFind - System.currentTimeMillis() > 0){
+                while (whenToFind - System.currentTimeMillis() > 0) {
                     return Collections.emptyList();
                 }
                 return children;
@@ -82,5 +84,64 @@ public class ElementMockBuilder {
 
     public ElementMockBuilder finds(List<Element> children, String cssSelector) {
         return finds(children, cssSelector, 0);
+    }
+
+    private class SelectElementMock implements SelectElement {
+        @ParametersAreNonnullByDefault
+        private final Element element;
+
+        public SelectElementMock(Element element) {
+            this.element = element;
+        }
+
+        @Override
+        public void selectByVisibleText(String text) {
+            List<Element> options = getOptions();
+            for (Element option : options) {
+                String optionText = option.getText();
+                if (optionText != null && text.equals(optionText)) {
+                    option.click();
+                    if (isSingleSelect()) {
+                        return;
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void selectByValue(String value) {
+            List<Element> options = getOptions();
+            for (Element option : options) {
+                String optionValue = option.getAttribute("value");
+                if (optionValue != null && value.equals(optionValue)) {
+                    option.click();
+                    if (isSingleSelect()) {
+                        return;
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void selectByIndex(int index) {
+            String indexAsString = "" + index;
+            List<Element> options = getOptions();
+            for (Element option : options) {
+                String optionIndex = option.getAttribute("index");
+                if (optionIndex != null && indexAsString.equals(optionIndex)) {
+                    option.click();
+                    return;
+                }
+            }
+        }
+
+        private List<Element> getOptions() {
+            return element.findElements("option");
+        }
+
+        private boolean isSingleSelect() {
+            return element.getAttribute("multiple") == null || element.getAttribute("multiple").equals("false");
+        }
+
     }
 }

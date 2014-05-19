@@ -229,48 +229,39 @@ public class ElementCollectionImplTest {
         verify(input).sendKeys("valluee");
     }
 
-//    public void Setting_Value_On_A_Single_Select_Should_Select_The_Correct_Option() {
-//        final Element one = optionWithText("text").build_();
-//        final Element two = optionWithText("text").build_();
-//
-//        final Element select = new ElementMockBuilder()
-//                .withTagName("select")
-//                .finds(Lists.newArrayList(one, two), By.xpath(".//option[@value = \"text\"]"))
-//                .build_();
-//
-//        elementCollection_(select).val("text");
-//        verify(one).click();
-//        verifyZeroInteractions(two);
-//    }
+    public void Setting_Value_On_A_Single_Select_Should_Select_The_Correct_Option() {
+        final Element one = optionWithValue("text").build();
+        final Element two = optionWithValue("text").build();
 
-//    public void Setting_Value_On_A_Multi_Select_Should_Select_All_The_Correct_Options() {
-//        final Element one = optionWithText("text").build_();
-//        final Element two = optionWithText("text").build_();
-//
-//        final Element select = new ElementMockBuilder()
-//                .withTagName("select")
-//                .finds(Lists.newArrayList(one, two), By.xpath(".//option[@value = \"text\"]"))
-//                .withAttribute("multiple", "true")
-//                .build_();
-//
-//        elementCollection_(select).val("text");
-//        verify(one).click();
-//        verify(two).click();
-//    }
+        final Element select = singleSelect(one, two);
 
-//    public void Setting_Value_By_Index_On_A_Select_Should_Select_The_Correct_Option() {
-//        final Element zero = optionWithIndex("0").build_();
-//        final Element one = optionWithIndex("1").build_();
-//        final Element two = optionWithIndex("2").build_();
-//
-//        final Element select = new ElementMockBuilder()
-//                .withTagName("select")
-//                .finds(Lists.newArrayList(zero, one, two), By.tagName("option"))
-//                .build_();
-//
-//        elementCollection_(select).valByIndex(1);
-//        verify(one).click();
-//    }
+        elementCollection(select).val("text");
+        verify(one).click();
+        verifyZeroInteractions(two);
+    }
+
+    public void Setting_Value_On_A_Multi_Select_Should_Select_All_The_Correct_Options() {
+        final Element one = optionWithValue("text").build();
+        final Element two = optionWithValue("text").build();
+
+        final Element select = multiSelect(one, two);
+
+        elementCollection(select).val("text");
+        verify(one).click();
+        verify(two).click();
+    }
+
+    public void Setting_Value_By_Index_On_A_Select_Should_Select_The_Correct_Option() {
+        final Element zero = optionWithIndex("0").build();
+        final Element one = optionWithIndex("1").build();
+        final Element two = optionWithIndex("2").build();
+
+        final Element select = singleSelect(zero, one, two);
+
+        elementCollection(select).valByIndex(1);
+        verify(one).click();
+    }
+
 
     public void Setting_Value_By_Index_On_Non_Select_Element_Should_Set_Value_To_Value_Of_Index() {
         final Element input = new ElementMockBuilder().withTagName("input").isDisplayed(true).build();
@@ -284,34 +275,27 @@ public class ElementCollectionImplTest {
         verify(input).sendKeys("text");
     }
 
-//    public void Setting_Value_By_Visible_Text_On_A_Single_Select_Should_Select_The_Correct_Option() {
-//        final Element one = optionWithText("text").build_();
-//        final Element two = optionWithText("text").build_();
-//
-//        final Element select = new ElementMockBuilder()
-//                .withTagName("select")
-//                .finds(Lists.newArrayList(one, two), By.xpath(".//option[normalize-space(.) = \"text\"]"))
-//                .build_();
-//
-//        elementCollection_(select).valByVisibleText("text");
-//        verify(one).click();
-//        verifyZeroInteractions(two);
-//    }
+    public void Setting_Value_By_Visible_Text_On_A_Single_Select_Should_Select_The_Correct_Option() {
+        final Element one = optionWithText("text").build();
+        final Element two = optionWithText("text").build();
 
-//    public void Setting_Value_By_Visible_Text_On_A_Multi_Select_Should_Select_All_The_Correct_Options() {
-//        final Element one = optionWithText("text").build_();
-//        final Element two = optionWithText("text").build_();
-//
-//        final Element select = new ElementMockBuilder()
-//                .withTagName("select")
-//                .finds(Lists.newArrayList(one, two), By.xpath(".//option[normalize-space(.) = \"text\"]"))
-//                .withAttribute("multiple", "true")
-//                .build_();
-//
-//        elementCollection_(select).valByVisibleText("text");
-//        verify(one).click();
-//        verify(two).click();
-//    }
+        final Element select = singleSelect(one, two);
+
+        elementCollection(select).valByVisibleText("text");
+        verify(one).click();
+        verifyZeroInteractions(two);
+    }
+
+    public void Setting_Value_By_Visible_Text_On_A_Multi_Select_Should_Select_All_The_Correct_Options() {
+        final Element one = optionWithText("text").build();
+        final Element two = optionWithText("text").build();
+
+        final Element select = multiSelect(one, two);
+
+        elementCollection(select).valByVisibleText("text");
+        verify(one).click();
+        verify(two).click();
+    }
 
     private ElementMockBuilder optionWithIndex(String index) {
         return new ElementMockBuilder().withTagName("option").withAttribute("index", index);
@@ -319,6 +303,25 @@ public class ElementCollectionImplTest {
 
     private ElementMockBuilder optionWithText(String text) {
         return new ElementMockBuilder().withTagName("option").withText(text);
+    }
+
+    private ElementMockBuilder optionWithValue(String value) {
+        return new ElementMockBuilder().withTagName("option").withAttribute("value", value);
+    }
+
+    private Element singleSelect(Element... elements) {
+        return new ElementMockBuilder()
+                .withTagName("select")
+                .finds(Lists.newArrayList(elements), "option")
+                .build();
+    }
+
+    private Element multiSelect(Element... elements) {
+        return new ElementMockBuilder()
+                .withTagName("select")
+                .finds(Lists.newArrayList(elements), "option")
+                .withAttribute("multiple", "true")
+                .build();
     }
 
     public void When_All_Elements_Are_Displayed_In_Collection_Should_Give_True() throws Exception {
