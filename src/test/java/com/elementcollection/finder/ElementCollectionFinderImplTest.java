@@ -2,12 +2,12 @@ package com.elementcollection.finder;
 
 import com.elementcollection.collection.ElementCollection;
 import com.elementcollection.driver.Driver;
+import com.elementcollection.element.Element;
 import com.elementcollection.type.TimeUnit;
 import com.google.common.collect.Lists;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -25,13 +25,13 @@ import static org.mockito.Mockito.when;
 public class ElementCollectionFinderImplTest {
 
     public void testFindingElementsThatCanBeFoundWithoutDelayShouldReturnTheElementsAtOnce() {
-        final WebElement webElementOne = mock(WebElement.class);
-        final WebElement webElementTwo = mock(WebElement.class);
+        final Element elementOne = mock(Element.class);
+        final Element elementTwo = mock(Element.class);
 
-        Answer<List<WebElement>> answer = new Answer<List<WebElement>>() {
+        Answer<List<Element>> answer = new Answer<List<Element>>() {
             @Override
-            public List<WebElement> answer(InvocationOnMock invocation) throws Throwable {
-                return Lists.newArrayList(webElementOne, webElementTwo);
+            public List<Element> answer(InvocationOnMock invocation) throws Throwable {
+                return Lists.newArrayList(elementOne, elementTwo);
             }
         };
 
@@ -41,9 +41,9 @@ public class ElementCollectionFinderImplTest {
 
     @Test(expectedExceptions = NoSuchElementException.class)
     public void testFindingElementsThatThrowExceptionShouldThrowException() {
-        Answer<List<WebElement>> answer = new Answer<List<WebElement>>() {
+        Answer<List<Element>> answer = new Answer<List<Element>>() {
             @Override
-            public List<WebElement> answer(InvocationOnMock invocation) throws Throwable {
+            public List<Element> answer(InvocationOnMock invocation) throws Throwable {
                 throw new NoSuchElementException("test");
             }
         };
@@ -53,29 +53,29 @@ public class ElementCollectionFinderImplTest {
 
 
     public void testFindingElementsThatAreOnlyFindableAfter500MillisecondsShouldReturnExpectedElements() {
-        final WebElement webElementOne = mock(WebElement.class);
-        final WebElement webElementTwo = mock(WebElement.class);
+        final Element elementOne = mock(Element.class);
+        final Element elementTwo = mock(Element.class);
         final Driver webDriver =
                 driverThatAnswers(delayedAnswer(getReturnTime(500),
-                        Lists.newArrayList(webElementOne, webElementTwo)));
+                        Lists.newArrayList(elementOne, elementTwo)));
 
         ElementCollection elements = ElementCollectionFinders.create(webDriver).within(TimeUnit.millis(550)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
     public void testFindingElementsThrowExceptionTheFirst3TimesShouldReturnExpectedElements() {
-        final WebElement webElementOne = mock(WebElement.class);
-        final WebElement webElementTwo = mock(WebElement.class);
-        Answer<List<WebElement>> answer = new Answer<List<WebElement>>() {
+        final Element elementOne = mock(Element.class);
+        final Element elementTwo = mock(Element.class);
+        Answer<List<Element>> answer = new Answer<List<Element>>() {
             private int count = 0;
 
             @Override
-            public List<WebElement> answer(InvocationOnMock invocation) throws Throwable {
+            public List<Element> answer(InvocationOnMock invocation) throws Throwable {
                 if (count < 3) {
                     count++;
                     throw new NoSuchElementException("test");
                 }
-                return Lists.newArrayList(webElementOne, webElementTwo);
+                return Lists.newArrayList(elementOne, elementTwo);
             }
         };
 
@@ -83,7 +83,7 @@ public class ElementCollectionFinderImplTest {
         assertThat(elements.length(), is(2));
     }
 
-    private Driver driverThatAnswers(Answer<List<WebElement>> answer) {
+    private Driver driverThatAnswers(Answer<List<Element>> answer) {
         final Driver driver = mock(Driver.class);
         when(driver
                 .findElements("someCssSelector"))
@@ -95,12 +95,12 @@ public class ElementCollectionFinderImplTest {
         return System.currentTimeMillis() + delayInMillis;
     }
 
-    private Answer<List<WebElement>> delayedAnswer(final long returnTime, final List<WebElement> webElements) {
-        return new Answer<List<WebElement>>() {
+    private Answer<List<Element>> delayedAnswer(final long returnTime, final List<Element> elements) {
+        return new Answer<List<Element>>() {
             @Override
-            public List<WebElement> answer(InvocationOnMock invocation) throws Throwable {
+            public List<Element> answer(InvocationOnMock invocation) throws Throwable {
                 if (returnTime - System.currentTimeMillis() > 0) return Collections.emptyList();
-                return webElements;
+                return elements;
             }
         };
     }

@@ -3,8 +3,6 @@ package com.elementcollection;
 import com.elementcollection.element.Element;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
@@ -17,39 +15,39 @@ import static org.mockito.Mockito.when;
  * <br> User: Mangan <br> Date: 13/11/13
  */
 @ParametersAreNonnullByDefault
-public class WebElementMockBuilder {
+public class ElementMockBuilder {
 
     private final Element mock;
 
-    public WebElementMockBuilder() {
+    public ElementMockBuilder() {
         mock = mock(Element.class);
     }
 
-    public WebElement build() {
+    public Element build() {
         return mock;
     }
 
-    public WebElementMockBuilder withTagName(String tagName) {
+    public ElementMockBuilder withTagName(String tagName) {
         when(mock.getTagName()).thenReturn(tagName);
         return this;
     }
 
-    public WebElementMockBuilder withAttribute(String attribute, String value) {
+    public ElementMockBuilder withAttribute(String attribute, String value) {
         when(mock.getAttribute(attribute)).thenReturn(value);
         return this;
     }
 
-    public WebElementMockBuilder setSelected(boolean isSelected) {
+    public ElementMockBuilder setSelected(boolean isSelected) {
         when(mock.isSelected()).thenReturn(isSelected);
         return this;
     }
 
-    public WebElementMockBuilder isDisplayed(boolean isDisplayed) {
+    public ElementMockBuilder isDisplayed(boolean isDisplayed) {
         when(mock.isDisplayed()).thenReturn(isDisplayed);
         return this;
     }
 
-    public WebElementMockBuilder isDisplayedAfter(int secs) {
+    public ElementMockBuilder isDisplayedAfter(int secs) {
         final long whenToDisplay = System.currentTimeMillis() + secs * 1000;
         when(mock.isDisplayed()).thenAnswer(new Answer<Boolean>() {
             @Override
@@ -63,11 +61,11 @@ public class WebElementMockBuilder {
         return this;
     }
 
-    public WebElementMockBuilder finds(final List<WebElement> children, By by, int afterSecs){
+    public ElementMockBuilder finds(final List<Element> children, String cssSelector, int afterSecs) {
         final long whenToFind = System.currentTimeMillis() + afterSecs * 1000;
-        when(mock.findElements(by)).thenAnswer(new Answer<List<WebElement>>() {
+        when(mock.findElements(cssSelector)).thenAnswer(new Answer<List<Element>>() {
             @Override
-            public List<WebElement> answer(InvocationOnMock invocation) throws Throwable {
+            public List<Element> answer(InvocationOnMock invocation) throws Throwable {
                 while (whenToFind - System.currentTimeMillis() > 0){
                     return Collections.emptyList();
                 }
@@ -77,12 +75,12 @@ public class WebElementMockBuilder {
         return this;
     }
 
-    public WebElementMockBuilder withText(String text) {
+    public ElementMockBuilder withText(String text) {
         when(mock.getText()).thenReturn(text);
         return this;
     }
 
-    public WebElementMockBuilder finds(List<WebElement> children, By by) {
-        return finds(children, by, 0);
+    public ElementMockBuilder finds(List<Element> children, String cssSelector) {
+        return finds(children, cssSelector, 0);
     }
 }
