@@ -1,12 +1,11 @@
 package com.elementcollection.element;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import static com.google.common.collect.Lists.transform;
 
 public class Elements {
 
@@ -19,7 +18,7 @@ public class Elements {
     }
 
     public static List<Element> fromWebElements(List<WebElement> elements) {
-        return transform(elements, new Function<WebElement, Element>() {
+        return Lists.transform(elements, new Function<WebElement, Element>() {
 
             @Nullable
             @Override

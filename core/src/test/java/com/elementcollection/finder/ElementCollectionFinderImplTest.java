@@ -15,8 +15,6 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * <br> User: Mangan <br> Date: 09/12/13
@@ -25,8 +23,8 @@ import static org.mockito.Mockito.when;
 public class ElementCollectionFinderImplTest {
 
     public void testFindingElementsThatCanBeFoundWithoutDelayShouldReturnTheElementsAtOnce() {
-        final Element elementOne = mock(Element.class);
-        final Element elementTwo = mock(Element.class);
+        final Element elementOne = Mockito.mock(Element.class);
+        final Element elementTwo = Mockito.mock(Element.class);
 
         Answer<List<Element>> answer = new Answer<List<Element>>() {
             @Override
@@ -53,8 +51,8 @@ public class ElementCollectionFinderImplTest {
 
 
     public void testFindingElementsThatAreOnlyFindableAfter500MillisecondsShouldReturnExpectedElements() {
-        final Element elementOne = mock(Element.class);
-        final Element elementTwo = mock(Element.class);
+        final Element elementOne = Mockito.mock(Element.class);
+        final Element elementTwo = Mockito.mock(Element.class);
         final Driver webDriver =
                 driverThatAnswers(delayedAnswer(getReturnTime(500),
                         Lists.newArrayList(elementOne, elementTwo)));
@@ -64,8 +62,8 @@ public class ElementCollectionFinderImplTest {
     }
 
     public void testFindingElementsThrowExceptionTheFirst3TimesShouldReturnExpectedElements() {
-        final Element elementOne = mock(Element.class);
-        final Element elementTwo = mock(Element.class);
+        final Element elementOne = Mockito.mock(Element.class);
+        final Element elementTwo = Mockito.mock(Element.class);
         Answer<List<Element>> answer = new Answer<List<Element>>() {
             private int count = 0;
 
@@ -84,8 +82,8 @@ public class ElementCollectionFinderImplTest {
     }
 
     private Driver driverThatAnswers(Answer<List<Element>> answer) {
-        final Driver driver = mock(Driver.class);
-        when(driver
+        final Driver driver = Mockito.mock(Driver.class);
+        Mockito.when(driver
                 .findElements("someCssSelector"))
                 .thenAnswer(answer);
         return driver;

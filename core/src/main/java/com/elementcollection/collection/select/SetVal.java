@@ -2,13 +2,13 @@ package com.elementcollection.collection.select;
 
 import com.elementcollection.element.Element;
 import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 import static com.elementcollection.util.ElementUtil.isSelectBox;
-import static com.google.common.base.Preconditions.checkState;
 
 /**
  * <br> User: Mangan <br> Date: 20/11/13
@@ -39,7 +39,7 @@ public class SetVal implements Function<List<Element>, List<Element>> {
     @Nullable
     @Override
     public List<Element> apply(@Nullable List<Element> input) {
-        checkState(input.size() > 0, "Trying to set text:\"" + value + "\" on empty collection.");
+        Preconditions.checkState(input.size() > 0, "Trying to set text:\"" + value + "\" on empty collection.");
         for (Element element : input) {
             if (isSelectBox(element)) {
                 selectFunction.apply(element);

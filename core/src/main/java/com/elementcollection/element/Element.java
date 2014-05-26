@@ -7,8 +7,6 @@ public interface Element {
 
     List<Element> findElements(String cssSelector);
 
-    SelectElement asSelect();
-
     void click();
 
     void submit();
@@ -26,4 +24,6 @@ public interface Element {
     void clear();
 
     void sendKeys(CharSequence... value);
+
+    SelectElement asSelect();
 }

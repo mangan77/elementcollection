@@ -15,7 +15,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 import static com.elementcollection.util.ElementUtil.*;
-import static com.google.common.base.Preconditions.*;
 
 @ParametersAreNonnullByDefault
 class ElementCollectionImpl implements ElementCollection {
@@ -25,13 +24,13 @@ class ElementCollectionImpl implements ElementCollection {
     private FindContext findContext;
 
     ElementCollectionImpl(FindContext findContext, @Nullable String selectorString, List<Element> elements) {
-        this.elements = checkNotNull(elements, "elements");
+        this.elements = Preconditions.checkNotNull(elements, "elements");
         this.selectorString = selectorString;
         this.findContext = findContext;
     }
 
     private ElementCollectionImpl(@Nullable final String selectorString, final Element... elements) {
-        this(FindContexts.immediate(), selectorString, Lists.newArrayList(checkNotNull(elements)));
+        this(FindContexts.immediate(), selectorString, Lists.newArrayList(Preconditions.checkNotNull(elements)));
     }
 
     @Override
@@ -42,7 +41,7 @@ class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public ElementCollection click() {
-        checkState(!elements.isEmpty(), "Trying to click on non existing element.");
+        Preconditions.checkState(!elements.isEmpty(), "Trying to click on non existing element.");
         for (Element element : elements) {
             element.click();
         }
@@ -51,7 +50,7 @@ class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public ElementCollection submit() {
-        checkState(!elements.isEmpty(), "Trying to submit a non existing element.");
+        Preconditions.checkState(!elements.isEmpty(), "Trying to submit a non existing element.");
         for (Element element : elements) {
             element.submit();
         }
@@ -126,7 +125,7 @@ class ElementCollectionImpl implements ElementCollection {
     }
 
     private void setValue(Element element, boolean value) {
-        checkArgument(isCheckbox(element) || isRadioButton(element) || isSelectOption(element),
+        Preconditions.checkArgument(isCheckbox(element) || isRadioButton(element) || isSelectOption(element),
                 "Boolean values can only be set to checkboxes, radio buttons and select options");
 
         if (isSelectedButShouldBeDeselected(element, value) || isNotSelectedButShouldBeSelected(element, value)) {

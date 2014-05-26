@@ -7,11 +7,10 @@ import com.elementcollection.context.FindContexts;
 import com.elementcollection.driver.Driver;
 import com.elementcollection.element.Element;
 import com.elementcollection.type.TimeUnit;
+import com.google.common.base.Preconditions;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * <br> User: Mangan <br> Date: 09/12/13
@@ -37,7 +36,7 @@ class ElementCollectionFinderImpl implements ElementCollectionFinder {
     }
 
     private List<Element> findElements(String cssSelector) {
-        return findContext.find(checkNotNull(cssSelector), new DriverFindFunction(driver));
+        return findContext.find(Preconditions.checkNotNull(cssSelector), new DriverFindFunction(driver));
     }
 
     @Override

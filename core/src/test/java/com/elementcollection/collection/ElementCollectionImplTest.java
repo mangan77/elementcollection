@@ -9,8 +9,7 @@ import com.google.common.collect.Lists;
 import org.testng.annotations.Test;
 
 import static com.elementcollection.type.TimeUnit.secs;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * <br> User: Mangan <br> Date: 31/10/13
@@ -36,7 +35,7 @@ public class ElementCollectionImplTest {
     public void Clicking_An_Empty_Collection_Should_Throw_Illegal_Argument_Exception() {
         final ElementCollection elementCollection = emptyElementCollection();
         elementCollection.click();
-        fail();
+        Assert.fail();
     }
 
     public void When_More_Then_One_Element_In_Collection_All_Elements_Should_Get_Clicked() {
@@ -44,8 +43,8 @@ public class ElementCollectionImplTest {
         final Element two = new ElementMockBuilder().build();
 
         elementCollection(one, two).click();
-        verify(one).click();
-        verify(two).click();
+        Mockito.verify(one).click();
+        Mockito.verify(two).click();
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
@@ -58,8 +57,8 @@ public class ElementCollectionImplTest {
         final Element two = new ElementMockBuilder().build();
 
         elementCollection(one, two).submit();
-        verify(one).submit();
-        verify(two).submit();
+        Mockito.verify(one).submit();
+        Mockito.verify(two).submit();
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
@@ -107,14 +106,14 @@ public class ElementCollectionImplTest {
     public void Getting_Value_From_Empty_Collection_Should_Return_Null() {
         final ElementCollection elementCollection = emptyElementCollection();
 
-        assertNull(elementCollection.val());
+        Assert.assertNull(elementCollection.val());
     }
 
     public void Getting_Value_From_A_Collection_Should_Return_The_Value_Of_The_First_Element() {
         final Element one = new ElementMockBuilder().withText("one").build();
         final Element two = new ElementMockBuilder().withText("two").build();
 
-        assertEquals(elementCollection(one, two).val(), "one");
+        Assert.assertEquals(elementCollection(one, two).val(), "one");
     }
 
     public void Setting_Value_True_To_An_Unchecked_Checkable_Should_Make_It_Checked() {
@@ -122,7 +121,7 @@ public class ElementCollectionImplTest {
         final ElementCollection elementCollection = elementCollection(webElement);
 
         elementCollection.val(true);
-        verify(webElement).click();
+        Mockito.verify(webElement).click();
     }
 
     public void Setting_Value_True_To_An_Already_Checked_Checkable_Should_Leave_It_Checked() {
@@ -135,14 +134,14 @@ public class ElementCollectionImplTest {
         final ElementCollection elementCollection = elementCollection(webElement);
 
         elementCollection.val(true);
-        verify(webElement, never()).click();
+        Mockito.verify(webElement, Mockito.never()).click();
     }
 
     public void Setting_Value_False_To_A_Checked_Checkbox_Should_Make_It_Unchecked() {
         final Element webElement = new ElementMockBuilder().withTagName("option").setSelected(true).build();
 
         elementCollection(webElement).val(false);
-        verify(webElement).click();
+        Mockito.verify(webElement).click();
     }
 
     public void Setting_Value_False_To_An_Already_Unchecked_Checkbox_Should_Leave_It_Unchecked() {
@@ -153,7 +152,7 @@ public class ElementCollectionImplTest {
                 .build();
 
         elementCollection(webElement).val(false);
-        verify(webElement, never()).click();
+        Mockito.verify(webElement, Mockito.never()).click();
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -166,11 +165,11 @@ public class ElementCollectionImplTest {
         final Element webElementOne = new ElementMockBuilder().isDisplayed(true).build();
         final Element webElementTwo = new ElementMockBuilder().build();
 
-        assertFalse(elementCollection(webElementOne, webElementTwo).isDisplayed());
+        Assert.assertFalse(elementCollection(webElementOne, webElementTwo).isDisplayed());
     }
 
     public void No_Element_In_Collection_Should_Give_False() {
-        assertFalse(emptyElementCollection().isDisplayed());
+        Assert.assertFalse(emptyElementCollection().isDisplayed());
     }
 
     public void Find_On_Empty_Collection_Should_Return_Empty_Collection() {
@@ -210,23 +209,23 @@ public class ElementCollectionImplTest {
     }
 
     public void Waiting_Before_Find_Should_Call_Find_Method_After_Wait_Time_And_Not_Before() {
-        ElementCollectionWithSpy elementCollection = elementCollection(mock(Element.class));
+        ElementCollectionWithSpy elementCollection = elementCollection(Mockito.mock(Element.class));
         elementCollection.wait(secs(2)).find("something");
 
-        assertEquals(elementCollection.getSpy().get("find").size(), 1);
-        assertTrue(elementCollection.getSpy().get("find").get(0).getDuration() > 1999l, "Duration : " + elementCollection.getSpy().get("find").get(0).getDuration() + " ms");
+        Assert.assertEquals(elementCollection.getSpy().get("find").size(), 1);
+        Assert.assertTrue(elementCollection.getSpy().get("find").get(0).getDuration() > 1999l, "Duration : " + elementCollection.getSpy().get("find").get(0).getDuration() + " ms");
     }
 
     public void Setting_Integer_Value_To_A_Non_Select_Element_Should_Set_Value_To_Integer_Value() {
         final Element input = new ElementMockBuilder().withTagName("input").isDisplayed(true).build();
         elementCollection(input).val(1);
-        verify(input).sendKeys("1");
+        Mockito.verify(input).sendKeys("1");
     }
 
     public void Setting_Value_To_A_Non_Select_Element_Should_Set_Value_To_Value() {
         final Element input = new ElementMockBuilder().withTagName("input").isDisplayed(true).build();
         elementCollection(input).val("valluee");
-        verify(input).sendKeys("valluee");
+        Mockito.verify(input).sendKeys("valluee");
     }
 
     public void Setting_Value_On_A_Single_Select_Should_Select_The_Correct_Option() {
@@ -236,8 +235,8 @@ public class ElementCollectionImplTest {
         final Element select = singleSelect(one, two);
 
         elementCollection(select).val("text");
-        verify(one).click();
-        verifyZeroInteractions(two);
+        Mockito.verify(one).click();
+        Mockito.verifyZeroInteractions(two);
     }
 
     public void Setting_Value_On_A_Multi_Select_Should_Select_All_The_Correct_Options() {
@@ -247,8 +246,8 @@ public class ElementCollectionImplTest {
         final Element select = multiSelect(one, two);
 
         elementCollection(select).val("text");
-        verify(one).click();
-        verify(two).click();
+        Mockito.verify(one).click();
+        Mockito.verify(two).click();
     }
 
     public void Setting_Value_By_Index_On_A_Select_Should_Select_The_Correct_Option() {
@@ -259,20 +258,20 @@ public class ElementCollectionImplTest {
         final Element select = singleSelect(zero, one, two);
 
         elementCollection(select).valByIndex(1);
-        verify(one).click();
+        Mockito.verify(one).click();
     }
 
 
     public void Setting_Value_By_Index_On_Non_Select_Element_Should_Set_Value_To_Value_Of_Index() {
         final Element input = new ElementMockBuilder().withTagName("input").isDisplayed(true).build();
         elementCollection(input).valByIndex(2);
-        verify(input).sendKeys("2");
+        Mockito.verify(input).sendKeys("2");
     }
 
     public void Setting_Value_By_Visible_Text_On_Non_Select_Element_Should_Set_Value_Correctly() {
         final Element input = new ElementMockBuilder().withTagName("input").isDisplayed(true).build();
         elementCollection(input).valByVisibleText("text");
-        verify(input).sendKeys("text");
+        Mockito.verify(input).sendKeys("text");
     }
 
     public void Setting_Value_By_Visible_Text_On_A_Single_Select_Should_Select_The_Correct_Option() {
@@ -282,8 +281,8 @@ public class ElementCollectionImplTest {
         final Element select = singleSelect(one, two);
 
         elementCollection(select).valByVisibleText("text");
-        verify(one).click();
-        verifyZeroInteractions(two);
+        Mockito.verify(one).click();
+        Mockito.verifyZeroInteractions(two);
     }
 
     public void Setting_Value_By_Visible_Text_On_A_Multi_Select_Should_Select_All_The_Correct_Options() {
@@ -293,8 +292,8 @@ public class ElementCollectionImplTest {
         final Element select = multiSelect(one, two);
 
         elementCollection(select).valByVisibleText("text");
-        verify(one).click();
-        verify(two).click();
+        Mockito.verify(one).click();
+        Mockito.verify(two).click();
     }
 
     private ElementMockBuilder optionWithIndex(String index) {
@@ -328,26 +327,26 @@ public class ElementCollectionImplTest {
         final Element one = new ElementMockBuilder().isDisplayed(true).build();
         final Element two = new ElementMockBuilder().isDisplayed(true).build();
 
-        assertTrue(elementCollection(one, two).isDisplayed());
+        Assert.assertTrue(elementCollection(one, two).isDisplayed());
     }
 
     public void When_No_Elements_In_Collection_Is_Empty_Should_Return_True() throws Exception {
-        assertTrue(emptyElementCollection().isEmpty());
+        Assert.assertTrue(emptyElementCollection().isEmpty());
     }
 
     public void When_Elements_In_Collection_Is_Empty_Should_Return_False() throws Exception {
         final Element one = new ElementMockBuilder().build();
 
-        assertFalse(elementCollection(one).isEmpty());
+        Assert.assertFalse(elementCollection(one).isEmpty());
     }
 
     public void When_No_Elements_In_Collection_Has_Elements_Should_Return_False() throws Exception {
-        assertFalse(emptyElementCollection().hasElements());
+        Assert.assertFalse(emptyElementCollection().hasElements());
     }
 
     public void When_Elements_In_Collection_Has_Elements_Should_Return_True() throws Exception {
         final Element one = new ElementMockBuilder().build();
-        assertTrue(elementCollection(one).hasElements());
+        Assert.assertTrue(elementCollection(one).hasElements());
     }
 
     public void Length_Is_Zero_When_No_Elements_In_Collection() throws Exception {
@@ -358,7 +357,7 @@ public class ElementCollectionImplTest {
         final Element one = new ElementMockBuilder().build();
         final Element two = new ElementMockBuilder().build();
 
-        assertEquals(elementCollection(one, two).length(), 2);
+        Assert.assertEquals(elementCollection(one, two).length(), 2);
     }
 
     private ElementCollection emptyElementCollection() {
