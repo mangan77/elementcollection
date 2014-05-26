@@ -17,7 +17,7 @@ public final class ElementCollections {
     }
 
     @Nonnull
-    public static ElementCollection create(String cssSelector, List<Element> webElements) {
-        return new ElementCollectionImpl(FindContexts.immediate(), cssSelector, webElements);
+    public static ElementCollection create(String cssSelector, List<Element> elements) {
+        return new ElementCollectionImpl(FindContexts.immediate(), cssSelector, elements);
     }
 }
