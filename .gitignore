@@ -3,3 +3,4 @@ out/*
 classes/*
 build/*
 .gradle/*
+releases/.DS_Store
