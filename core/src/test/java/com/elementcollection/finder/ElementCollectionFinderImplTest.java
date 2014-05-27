@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 @Test(groups = "unit")
 public class ElementCollectionFinderImplTest {
 
-    public void testFindingElementsThatCanBeFoundWithoutDelayShouldReturnTheElementsAtOnce() {
+    public void Finding_Elements_That_Can_Be_Found_Without_Delay_Should_Return_The_Elements_At_Once() {
         final Element elementOne = mock(Element.class);
         final Element elementTwo = mock(Element.class);
 
@@ -39,7 +39,7 @@ public class ElementCollectionFinderImplTest {
     }
 
     @Test(expectedExceptions = NoSuchElementException.class)
-    public void testFindingElementsThatThrowExceptionShouldThrowException() {
+    public void Finding_Elements_That_Throw_Exception_Should_Throw_Exception() {
         Answer<List<Element>> answer = new Answer<List<Element>>() {
             @Override
             public List<Element> answer(InvocationOnMock invocation) throws Throwable {
@@ -51,7 +51,7 @@ public class ElementCollectionFinderImplTest {
     }
 
 
-    public void testFindingElementsThatAreOnlyFindableAfter500MillisecondsShouldReturnExpectedElements() {
+    public void Finding_Elements_That_Are_Only_Findable_After_500_Milliseconds_Should_Return_Expected_Elements() {
         final Element elementOne = mock(Element.class);
         final Element elementTwo = mock(Element.class);
         final Driver webDriver =
@@ -62,7 +62,7 @@ public class ElementCollectionFinderImplTest {
         assertThat(elements.length(), is(2));
     }
 
-    public void testFindingElementsThrowExceptionTheFirst3TimesShouldReturnExpectedElements() {
+    public void Finding_Elements_Throw_Exception_The_First_3_Times_Should_Return_Expected_Elements() {
         final Element elementOne = mock(Element.class);
         final Element elementTwo = mock(Element.class);
         Answer<List<Element>> answer = new Answer<List<Element>>() {
@@ -104,7 +104,7 @@ public class ElementCollectionFinderImplTest {
         };
     }
 
-    private class NoSuchElementException extends Throwable {
+    private class NoSuchElementException extends Exception {
         private final String message;
 
         public NoSuchElementException(String message) {
