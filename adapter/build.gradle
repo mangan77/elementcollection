@@ -1,4 +1,6 @@
 dependencies {
     compile project(':api')
     compile project(':core')
+    compile 'org.seleniumhq.selenium:selenium-java:2.41.0'
+
 }

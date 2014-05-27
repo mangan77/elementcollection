@@ -8,7 +8,7 @@ import com.elementcollection.element.Element;
 import com.google.common.collect.Lists;
 import org.testng.annotations.Test;
 
-import static com.elementcollection.type.TimeUnit.secs;
+import static com.elementcollection.type.TimeUnits.secs;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 

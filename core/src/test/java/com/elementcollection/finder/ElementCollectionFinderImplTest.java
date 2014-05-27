@@ -3,18 +3,19 @@ package com.elementcollection.finder;
 import com.elementcollection.collection.ElementCollection;
 import com.elementcollection.driver.Driver;
 import com.elementcollection.element.Element;
-import com.elementcollection.type.TimeUnit;
 import com.google.common.collect.Lists;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.openqa.selenium.NoSuchElementException;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
 import java.util.List;
 
+import static com.elementcollection.type.TimeUnits.millis;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * <br> User: Mangan <br> Date: 09/12/13
@@ -23,8 +24,8 @@ import static org.hamcrest.core.Is.is;
 public class ElementCollectionFinderImplTest {
 
     public void testFindingElementsThatCanBeFoundWithoutDelayShouldReturnTheElementsAtOnce() {
-        final Element elementOne = Mockito.mock(Element.class);
-        final Element elementTwo = Mockito.mock(Element.class);
+        final Element elementOne = mock(Element.class);
+        final Element elementTwo = mock(Element.class);
 
         Answer<List<Element>> answer = new Answer<List<Element>>() {
             @Override
@@ -51,19 +52,19 @@ public class ElementCollectionFinderImplTest {
 
 
     public void testFindingElementsThatAreOnlyFindableAfter500MillisecondsShouldReturnExpectedElements() {
-        final Element elementOne = Mockito.mock(Element.class);
-        final Element elementTwo = Mockito.mock(Element.class);
+        final Element elementOne = mock(Element.class);
+        final Element elementTwo = mock(Element.class);
         final Driver webDriver =
                 driverThatAnswers(delayedAnswer(getReturnTime(500),
                         Lists.newArrayList(elementOne, elementTwo)));
 
-        ElementCollection elements = ElementCollectionFinders.create(webDriver).within(TimeUnit.millis(550)).find("someCssSelector");
+        ElementCollection elements = ElementCollectionFinders.create(webDriver).within(millis(550)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
     public void testFindingElementsThrowExceptionTheFirst3TimesShouldReturnExpectedElements() {
-        final Element elementOne = Mockito.mock(Element.class);
-        final Element elementTwo = Mockito.mock(Element.class);
+        final Element elementOne = mock(Element.class);
+        final Element elementTwo = mock(Element.class);
         Answer<List<Element>> answer = new Answer<List<Element>>() {
             private int count = 0;
 
@@ -77,13 +78,13 @@ public class ElementCollectionFinderImplTest {
             }
         };
 
-        ElementCollection elements = ElementCollectionFinders.create(driverThatAnswers(answer)).within(TimeUnit.millis(2500)).find("someCssSelector");
+        ElementCollection elements = ElementCollectionFinders.create(driverThatAnswers(answer)).within(millis(2500)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
     private Driver driverThatAnswers(Answer<List<Element>> answer) {
-        final Driver driver = Mockito.mock(Driver.class);
-        Mockito.when(driver
+        final Driver driver = mock(Driver.class);
+        when(driver
                 .findElements("someCssSelector"))
                 .thenAnswer(answer);
         return driver;
@@ -103,4 +104,11 @@ public class ElementCollectionFinderImplTest {
         };
     }
 
+    private class NoSuchElementException extends Throwable {
+        private final String message;
+
+        public NoSuchElementException(String message) {
+            this.message = message;
+        }
+    }
 }
