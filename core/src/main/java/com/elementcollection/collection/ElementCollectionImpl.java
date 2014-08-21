@@ -10,6 +10,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -191,5 +192,11 @@ class ElementCollectionImpl implements ElementCollection {
     @Override
     public ElementCollectionFinder wait(TimeUnit delay) {
         return new ElementCollectionImpl(FindContexts.waiting(delay), selectorString, elements);
+    }
+
+    @Nonnull
+    @Override
+    public ElementCollectionFinder visibleWithin(TimeUnit delay) {
+        return null;
     }
 }

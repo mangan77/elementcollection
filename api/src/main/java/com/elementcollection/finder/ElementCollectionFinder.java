@@ -44,4 +44,14 @@ public interface ElementCollectionFinder {
      */
     @Nonnull
     ElementCollectionFinder wait(TimeUnit delay);
+
+    /**
+     * Enables the {@code ElementCollectionFinder} to retry finding elements until they are visible.
+     *
+     * @param delay Delay length
+     * @return A new {@code ElementCollectionFinder}
+     * @since 1.0.0
+     */
+    @Nonnull
+    ElementCollectionFinder visibleWithin(TimeUnit delay);
 }

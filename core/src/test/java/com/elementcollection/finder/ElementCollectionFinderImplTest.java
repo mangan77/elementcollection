@@ -3,6 +3,7 @@ package com.elementcollection.finder;
 import com.elementcollection.collection.ElementCollection;
 import com.elementcollection.driver.Driver;
 import com.elementcollection.element.Element;
+import com.elementcollection.exception.ElementNotVisibleException;
 import com.google.common.collect.Lists;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -82,6 +83,83 @@ public class ElementCollectionFinderImplTest {
         assertThat(elements.length(), is(2));
     }
 
+    public void Finding_Elements_That_Are_Visible_Right_Away_Should_Return_Elements() {
+        final Element elementOne = mock(Element.class);
+        when(elementOne.isDisplayed()).thenReturn(true);
+        final Element elementTwo = mock(Element.class);
+        when(elementTwo.isDisplayed()).thenReturn(true);
+
+        Answer<List<Element>> answer = new Answer<List<Element>>() {
+            @Override
+            public List<Element> answer(InvocationOnMock invocation) throws Throwable {
+                return Lists.newArrayList(elementOne, elementTwo);
+            }
+        };
+
+        ElementCollection elements = ElementCollectionFinders.create(driverThatAnswers(answer)).visibleWithin(millis(100)).find("someCssSelector");
+        assertThat(elements.length(), is(2));
+    }
+
+    public void Finding_Elements_When_Visible_That_Are_Not_Found_Should_Return_Empty() {
+        final Element elementOne = mock(Element.class);
+        when(elementOne.isDisplayed()).thenReturn(true);
+        final Element elementTwo = mock(Element.class);
+        when(elementTwo.isDisplayed()).thenReturn(true);
+
+        Answer<List<Element>> answer = new Answer<List<Element>>() {
+            @Override
+            public List<Element> answer(InvocationOnMock invocation) throws Throwable {
+                return Lists.newArrayList();
+            }
+        };
+
+        ElementCollection elements = ElementCollectionFinders.create(driverThatAnswers(answer)).visibleWithin(millis(100)).find("someCssSelector");
+        assertThat(elements.length(), is(0));
+    }
+
+    @Test(expectedExceptions = ElementNotVisibleException.class)
+    public void Finding_Elements_That_Never_Becomes_Visible_Should_Throw_Exception() {
+        final Element elementOne = mock(Element.class);
+        when(elementOne.isDisplayed()).thenReturn(false);
+
+        Answer<List<Element>> answer = new Answer<List<Element>>() {
+            @Override
+            public List<Element> answer(InvocationOnMock invocation) throws Throwable {
+                return Lists.newArrayList(elementOne);
+            }
+        };
+
+        ElementCollectionFinders.create(driverThatAnswers(answer)).visibleWithin(millis(100)).find("someCssSelector");
+    }
+
+    public void Finding_Elements_That_Becomes_Visible_After_200_Milli_Seconds_Should_Return_Elements() {
+        final Element elementOne = mock(Element.class);
+        when(elementOne.isDisplayed()).thenReturn(false);
+        final Element elementTwo = mock(Element.class);
+        when(elementTwo.isDisplayed()).thenReturn(false);
+        List<Element> preReturnTime = Lists.newArrayList(elementOne, elementTwo);
+
+        final Element elementOneDisplayed = mock(Element.class);
+        when(elementOneDisplayed.isDisplayed()).thenReturn(true);
+        when(elementOneDisplayed.getAttribute("id")).thenReturn("oneDisplayed");
+        final Element elementTwoDisplayed = mock(Element.class);
+        when(elementTwoDisplayed.isDisplayed()).thenReturn(true);
+        when(elementTwoDisplayed.getAttribute("id")).thenReturn("twoDisplayed");
+        List<Element> afterReturnTime = Lists.newArrayList(elementOneDisplayed, elementTwoDisplayed);
+
+
+        final Driver driver = driverThatAnswers(timeDependentAnswer(getReturnTime(200),
+                preReturnTime,
+                afterReturnTime));
+
+        ElementCollection elements = ElementCollectionFinders.create(driver).visibleWithin(millis(300)).find("someCssSelector");
+        assertThat(elements.length(), is(2));
+        assertThat(elements.get(0).isDisplayed(), is(true));
+        assertThat(elements.get(0).attr("id"), is("oneDisplayed"));
+        assertThat(elements.get(1).isDisplayed(), is(true));
+        assertThat(elements.get(1).attr("id"), is("twoDisplayed"));
+    }
+
     private Driver driverThatAnswers(Answer<List<Element>> answer) {
         final Driver driver = mock(Driver.class);
         when(driver
@@ -100,6 +178,18 @@ public class ElementCollectionFinderImplTest {
             public List<Element> answer(InvocationOnMock invocation) throws Throwable {
                 if (returnTime - System.currentTimeMillis() > 0) return Collections.emptyList();
                 return elements;
+            }
+        };
+    }
+
+    private Answer<List<Element>> timeDependentAnswer(final long returnTime,
+                                                      final List<Element> preReturnTime,
+                                                      final List<Element> afterReturnTime) {
+        return new Answer<List<Element>>() {
+            @Override
+            public List<Element> answer(InvocationOnMock invocation) throws Throwable {
+                if (returnTime - System.currentTimeMillis() > 0) return preReturnTime;
+                return afterReturnTime;
             }
         };
     }

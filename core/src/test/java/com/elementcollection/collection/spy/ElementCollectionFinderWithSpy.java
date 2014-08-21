@@ -4,6 +4,8 @@ import com.elementcollection.collection.ElementCollection;
 import com.elementcollection.finder.ElementCollectionFinder;
 import com.elementcollection.type.TimeUnit;
 
+import javax.annotation.Nonnull;
+
 public class ElementCollectionFinderWithSpy implements ElementCollectionFinder {
 
     private final ElementCollectionFinder delegate;
@@ -48,6 +50,17 @@ public class ElementCollectionFinderWithSpy implements ElementCollectionFinder {
             @Override
             public ElementCollectionFinder execute() {
                 return delegate.wait(delay);
+            }
+        });
+    }
+
+    @Nonnull
+    @Override
+    public ElementCollectionFinder visibleWithin(final TimeUnit delay) {
+        return spy.spy(new MethodExecutor<ElementCollectionFinder>("visibleWithin") {
+            @Override
+            public ElementCollectionFinder execute() {
+                return delegate.visibleWithin(delay);
             }
         });
     }
