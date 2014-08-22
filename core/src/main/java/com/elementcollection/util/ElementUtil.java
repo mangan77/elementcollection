@@ -13,11 +13,11 @@ public final class ElementUtil {
     private ElementUtil() {
     }
 
-    public static boolean isCheckbox(final Element element) {
+    public static boolean isCheckbox(Element element) {
         return isInputOfType(element, "checkbox");
     }
 
-    public static boolean isRadioButton(final Element element) {
+    public static boolean isRadioButton(Element element) {
         return isInputOfType(element, "radio");
     }
 
@@ -25,7 +25,7 @@ public final class ElementUtil {
         return isTag(element, "option");
     }
 
-    public static boolean isSelectBox(final Element element) {
+    public static boolean isSelectBox(Element element) {
         return isTag(element, "select");
     }
 

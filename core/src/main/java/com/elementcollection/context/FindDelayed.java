@@ -26,7 +26,7 @@ class FindDelayed implements FindContext {
         RuntimeException thrownException = null;
         while (shouldTryAgain(endTime)) {
             try {
-                final List<Element> elements = findFunction.apply(cssSelector);
+                List<Element> elements = findFunction.apply(cssSelector);
                 if (elements.size() > 0) {
                     return elements;
                 }

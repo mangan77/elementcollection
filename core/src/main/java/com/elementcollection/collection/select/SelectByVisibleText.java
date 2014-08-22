@@ -13,7 +13,7 @@ class SelectByVisibleText extends SelectFunction {
     }
 
     @Override
-    void doSelect(final SelectElement select) {
+    void doSelect(SelectElement select) {
         select.selectByVisibleText(text);
     }
 

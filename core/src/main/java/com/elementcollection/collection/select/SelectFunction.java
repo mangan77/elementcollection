@@ -16,11 +16,11 @@ abstract class SelectFunction implements Function<Element, Boolean> {
 
     @Nullable
     @Override
-    public Boolean apply(@Nullable final Element element) {
+    public Boolean apply(@Nullable Element element) {
         doSelect(element.asSelect());
         return true;
     }
 
-    abstract void doSelect(final SelectElement select);
+    abstract void doSelect(SelectElement select);
 
 }
