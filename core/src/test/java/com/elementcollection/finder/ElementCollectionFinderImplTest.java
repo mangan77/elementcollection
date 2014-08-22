@@ -1,5 +1,6 @@
 package com.elementcollection.finder;
 
+import com.elementcollection.ElementMockBuilder;
 import com.elementcollection.collection.ElementCollection;
 import com.elementcollection.driver.Driver;
 import com.elementcollection.element.Element;
@@ -25,15 +26,10 @@ import static org.mockito.Mockito.when;
 public class ElementCollectionFinderImplTest {
 
     public void Finding_Elements_That_Can_Be_Found_Without_Delay_Should_Return_The_Elements_At_Once() {
-        final Element elementOne = mock(Element.class);
-        final Element elementTwo = mock(Element.class);
+        final Element elementOne = new ElementMockBuilder().build();
+        final Element elementTwo = new ElementMockBuilder().build();
 
-        Answer<List<Element>> answer = new Answer<List<Element>>() {
-            @Override
-            public List<Element> answer(InvocationOnMock invocation) throws Throwable {
-                return Lists.newArrayList(elementOne, elementTwo);
-            }
-        };
+        Answer<List<Element>> answer = answerWithElements(elementOne, elementTwo);
 
         ElementCollection elements = ElementCollectionFinders.create(driverThatAnswers(answer)).find("someCssSelector");
         assertThat(elements.length(), is(2));
@@ -51,21 +47,21 @@ public class ElementCollectionFinderImplTest {
         ElementCollectionFinders.create(driverThatAnswers(answer)).find("someCssSelector");
     }
 
-
     public void Finding_Elements_That_Are_Only_Findable_After_500_Milliseconds_Should_Return_Expected_Elements() {
-        final Element elementOne = mock(Element.class);
-        final Element elementTwo = mock(Element.class);
-        final Driver webDriver =
+        final Element elementOne = new ElementMockBuilder().build();
+        final Element elementTwo = new ElementMockBuilder().build();
+        final Driver driver =
                 driverThatAnswers(delayedAnswer(getReturnTime(500),
                         Lists.newArrayList(elementOne, elementTwo)));
 
-        ElementCollection elements = ElementCollectionFinders.create(webDriver).within(millis(550)).find("someCssSelector");
+        ElementCollection elements = ElementCollectionFinders.create(driver).within(millis(550)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
+
     public void Finding_Elements_Throw_Exception_The_First_3_Times_Should_Return_Expected_Elements() {
-        final Element elementOne = mock(Element.class);
-        final Element elementTwo = mock(Element.class);
+        final Element elementOne = new ElementMockBuilder().build();
+        final Element elementTwo = new ElementMockBuilder().build();
         Answer<List<Element>> answer = new Answer<List<Element>>() {
             private int count = 0;
 
@@ -84,34 +80,17 @@ public class ElementCollectionFinderImplTest {
     }
 
     public void Finding_Elements_That_Are_Visible_Right_Away_Should_Return_Elements() {
-        final Element elementOne = mock(Element.class);
-        when(elementOne.isDisplayed()).thenReturn(true);
-        final Element elementTwo = mock(Element.class);
-        when(elementTwo.isDisplayed()).thenReturn(true);
+        final Element elementOne = new ElementMockBuilder().isDisplayed(true).build();
+        final Element elementTwo = new ElementMockBuilder().isDisplayed(true).build();
 
-        Answer<List<Element>> answer = new Answer<List<Element>>() {
-            @Override
-            public List<Element> answer(InvocationOnMock invocation) throws Throwable {
-                return Lists.newArrayList(elementOne, elementTwo);
-            }
-        };
+        Answer<List<Element>> answer = answerWithElements(elementOne, elementTwo);
 
         ElementCollection elements = ElementCollectionFinders.create(driverThatAnswers(answer)).visibleWithin(millis(100)).find("someCssSelector");
         assertThat(elements.length(), is(2));
     }
 
     public void Finding_Elements_When_Visible_That_Are_Not_Found_Should_Return_Empty() {
-        final Element elementOne = mock(Element.class);
-        when(elementOne.isDisplayed()).thenReturn(true);
-        final Element elementTwo = mock(Element.class);
-        when(elementTwo.isDisplayed()).thenReturn(true);
-
-        Answer<List<Element>> answer = new Answer<List<Element>>() {
-            @Override
-            public List<Element> answer(InvocationOnMock invocation) throws Throwable {
-                return Lists.newArrayList();
-            }
-        };
+        Answer<List<Element>> answer = answerWithElements();
 
         ElementCollection elements = ElementCollectionFinders.create(driverThatAnswers(answer)).visibleWithin(millis(100)).find("someCssSelector");
         assertThat(elements.length(), is(0));
@@ -119,32 +98,20 @@ public class ElementCollectionFinderImplTest {
 
     @Test(expectedExceptions = ElementNotVisibleException.class)
     public void Finding_Elements_That_Never_Becomes_Visible_Should_Throw_Exception() {
-        final Element elementOne = mock(Element.class);
-        when(elementOne.isDisplayed()).thenReturn(false);
+        final Element elementOne = new ElementMockBuilder().isDisplayed(false).build();
 
-        Answer<List<Element>> answer = new Answer<List<Element>>() {
-            @Override
-            public List<Element> answer(InvocationOnMock invocation) throws Throwable {
-                return Lists.newArrayList(elementOne);
-            }
-        };
+        Answer<List<Element>> answer = answerWithElements(elementOne);
 
         ElementCollectionFinders.create(driverThatAnswers(answer)).visibleWithin(millis(100)).find("someCssSelector");
     }
 
     public void Finding_Elements_That_Becomes_Visible_After_200_Milli_Seconds_Should_Return_Elements() {
-        final Element elementOne = mock(Element.class);
-        when(elementOne.isDisplayed()).thenReturn(false);
-        final Element elementTwo = mock(Element.class);
-        when(elementTwo.isDisplayed()).thenReturn(false);
+        final Element elementOne = new ElementMockBuilder().isDisplayed(false).build();
+        final Element elementTwo = new ElementMockBuilder().isDisplayed(false).build();
         List<Element> preReturnTime = Lists.newArrayList(elementOne, elementTwo);
 
-        final Element elementOneDisplayed = mock(Element.class);
-        when(elementOneDisplayed.isDisplayed()).thenReturn(true);
-        when(elementOneDisplayed.getAttribute("id")).thenReturn("oneDisplayed");
-        final Element elementTwoDisplayed = mock(Element.class);
-        when(elementTwoDisplayed.isDisplayed()).thenReturn(true);
-        when(elementTwoDisplayed.getAttribute("id")).thenReturn("twoDisplayed");
+        final Element elementOneDisplayed = new ElementMockBuilder().isDisplayed(true).withAttribute("id", "oneDisplayed").build();
+        final Element elementTwoDisplayed = new ElementMockBuilder().isDisplayed(true).withAttribute("id", "twoDisplayed").build();
         List<Element> afterReturnTime = Lists.newArrayList(elementOneDisplayed, elementTwoDisplayed);
 
 
@@ -195,10 +162,21 @@ public class ElementCollectionFinderImplTest {
     }
 
     private class NoSuchElementException extends Exception {
+
         private final String message;
 
         public NoSuchElementException(String message) {
             this.message = message;
         }
+
+    }
+
+    private Answer<List<Element>> answerWithElements(final Element... elements) {
+        return new Answer<List<Element>>() {
+            @Override
+            public List<Element> answer(InvocationOnMock invocation) throws Throwable {
+                return Lists.newArrayList(elements);
+            }
+        };
     }
 }
