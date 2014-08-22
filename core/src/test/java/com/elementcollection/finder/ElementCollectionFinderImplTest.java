@@ -106,18 +106,10 @@ public class ElementCollectionFinderImplTest {
     }
 
     public void Finding_Elements_That_Becomes_Visible_After_200_Milli_Seconds_Should_Return_Elements() {
-        final Element elementOne = new ElementMockBuilder().isDisplayed(false).build();
-        final Element elementTwo = new ElementMockBuilder().isDisplayed(false).build();
-        List<Element> preReturnTime = Lists.newArrayList(elementOne, elementTwo);
+        final Element elementOneDisplayed = new ElementMockBuilder().isDisplayedAfter(millis(200)).withAttribute("id", "oneDisplayed").build();
+        final Element elementTwoDisplayed = new ElementMockBuilder().isDisplayedAfter(millis(200)).withAttribute("id", "twoDisplayed").build();
 
-        final Element elementOneDisplayed = new ElementMockBuilder().isDisplayed(true).withAttribute("id", "oneDisplayed").build();
-        final Element elementTwoDisplayed = new ElementMockBuilder().isDisplayed(true).withAttribute("id", "twoDisplayed").build();
-        List<Element> afterReturnTime = Lists.newArrayList(elementOneDisplayed, elementTwoDisplayed);
-
-
-        final Driver driver = driverThatAnswers(timeDependentAnswer(getReturnTime(200),
-                preReturnTime,
-                afterReturnTime));
+        final Driver driver = driverThatAnswers(answerWithElements(elementOneDisplayed, elementTwoDisplayed));
 
         ElementCollection elements = ElementCollectionFinders.create(driver).visibleWithin(millis(300)).find("someCssSelector");
         assertThat(elements.length(), is(2));
@@ -145,18 +137,6 @@ public class ElementCollectionFinderImplTest {
             public List<Element> answer(InvocationOnMock invocation) throws Throwable {
                 if (returnTime - System.currentTimeMillis() > 0) return Collections.emptyList();
                 return elements;
-            }
-        };
-    }
-
-    private Answer<List<Element>> timeDependentAnswer(final long returnTime,
-                                                      final List<Element> preReturnTime,
-                                                      final List<Element> afterReturnTime) {
-        return new Answer<List<Element>>() {
-            @Override
-            public List<Element> answer(InvocationOnMock invocation) throws Throwable {
-                if (returnTime - System.currentTimeMillis() > 0) return preReturnTime;
-                return afterReturnTime;
             }
         };
     }

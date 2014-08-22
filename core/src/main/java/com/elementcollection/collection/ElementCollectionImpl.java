@@ -197,6 +197,6 @@ class ElementCollectionImpl implements ElementCollection {
     @Nonnull
     @Override
     public ElementCollectionFinder visibleWithin(TimeUnit delay) {
-        return null;
+        return new ElementCollectionImpl(FindContexts.visibility(delay), selectorString, elements);
     }
 }

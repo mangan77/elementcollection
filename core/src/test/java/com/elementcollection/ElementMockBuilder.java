@@ -2,6 +2,7 @@ package com.elementcollection;
 
 import com.elementcollection.element.Element;
 import com.elementcollection.element.SelectElement;
+import com.elementcollection.type.TimeUnit;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -9,6 +10,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
 
+import static com.elementcollection.type.TimeUnits.millis;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -49,8 +51,8 @@ public class ElementMockBuilder {
         return this;
     }
 
-    public ElementMockBuilder isDisplayedAfter(int secs) {
-        final long whenToDisplay = System.currentTimeMillis() + secs * 1000;
+    public ElementMockBuilder isDisplayedAfter(TimeUnit delay) {
+        final long whenToDisplay = System.currentTimeMillis() + delay.inMilliseconds();
         when(mock.isDisplayed()).thenAnswer(new Answer<Boolean>() {
             @Override
             public Boolean answer(InvocationOnMock invocation) throws Throwable {
@@ -63,8 +65,8 @@ public class ElementMockBuilder {
         return this;
     }
 
-    public ElementMockBuilder finds(final List<Element> children, String cssSelector, int afterSecs) {
-        final long whenToFind = System.currentTimeMillis() + afterSecs * 1000;
+    public ElementMockBuilder finds(final List<Element> children, String cssSelector, TimeUnit delay) {
+        final long whenToFind = System.currentTimeMillis() + delay.inMilliseconds();
         when(mock.findElements(cssSelector)).thenAnswer(new Answer<List<Element>>() {
             @Override
             public List<Element> answer(InvocationOnMock invocation) throws Throwable {
@@ -83,7 +85,7 @@ public class ElementMockBuilder {
     }
 
     public ElementMockBuilder finds(List<Element> children, String cssSelector) {
-        return finds(children, cssSelector, 0);
+        return finds(children, cssSelector, millis(0));
     }
 
     private class SelectElementMock implements SelectElement {
