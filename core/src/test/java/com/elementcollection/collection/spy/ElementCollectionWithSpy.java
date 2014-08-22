@@ -12,7 +12,7 @@ public class ElementCollectionWithSpy extends ElementCollectionFinderWithSpy imp
 
     @Override
     public ElementCollection click() {
-        return getSpy().spy(new MethodExecutor<ElementCollection>("click") {
+        return getSpy().collectionSpy(new MethodExecutor<ElementCollection>("click") {
             @Override
             public ElementCollection execute() {
                 return castDelegate().click();

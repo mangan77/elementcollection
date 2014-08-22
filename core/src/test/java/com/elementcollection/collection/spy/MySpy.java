@@ -26,7 +26,7 @@ public class MySpy {
         return methodSpies.get(method);
     }
 
-    public ElementCollectionWithSpy spy(MethodExecutor<ElementCollection> methodExecutor) {
+    public ElementCollectionWithSpy collectionSpy(MethodExecutor<ElementCollection> methodExecutor) {
         MethodSpy methodSpy = new MethodSpy();
         methodSpy.start();
         ElementCollection elementCollection = methodExecutor.execute();
@@ -35,7 +35,7 @@ public class MySpy {
         return new ElementCollectionWithSpy(elementCollection, this);
     }
 
-    public ElementCollectionFinderWithSpy spy(MethodExecutor<ElementCollectionFinder> methodExecutor) {
+    public ElementCollectionFinderWithSpy finderSpy(MethodExecutor<ElementCollectionFinder> methodExecutor) {
         MethodSpy methodSpy = new MethodSpy();
         methodSpy.start();
         ElementCollectionFinder elementCollection = methodExecutor.execute();

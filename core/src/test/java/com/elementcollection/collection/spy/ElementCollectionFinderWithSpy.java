@@ -26,7 +26,7 @@ public class ElementCollectionFinderWithSpy implements ElementCollectionFinder {
 
     @Override
     public ElementCollection find(final String cssSelector) {
-        return spy.spy(new MethodExecutor<ElementCollection>("find") {
+        return spy.collectionSpy(new MethodExecutor<ElementCollection>("find") {
             @Override
             public ElementCollection execute() {
                 return delegate.find(cssSelector);
@@ -36,7 +36,7 @@ public class ElementCollectionFinderWithSpy implements ElementCollectionFinder {
 
     @Override
     public ElementCollectionFinder within(final TimeUnit delay) {
-        return spy.spy(new MethodExecutor<ElementCollectionFinder>("within") {
+        return spy.finderSpy(new MethodExecutor<ElementCollectionFinder>("within") {
             @Override
             public ElementCollectionFinder execute() {
                 return delegate.within(delay);
@@ -46,7 +46,7 @@ public class ElementCollectionFinderWithSpy implements ElementCollectionFinder {
 
     @Override
     public ElementCollectionFinder wait(final TimeUnit delay) {
-        return spy.spy(new MethodExecutor<ElementCollectionFinder>("wait") {
+        return spy.finderSpy(new MethodExecutor<ElementCollectionFinder>("wait") {
             @Override
             public ElementCollectionFinder execute() {
                 return delegate.wait(delay);
@@ -57,7 +57,7 @@ public class ElementCollectionFinderWithSpy implements ElementCollectionFinder {
     @Nonnull
     @Override
     public ElementCollectionFinder visibleWithin(final TimeUnit delay) {
-        return spy.spy(new MethodExecutor<ElementCollectionFinder>("visibleWithin") {
+        return spy.finderSpy(new MethodExecutor<ElementCollectionFinder>("visibleWithin") {
             @Override
             public ElementCollectionFinder execute() {
                 return delegate.visibleWithin(delay);
