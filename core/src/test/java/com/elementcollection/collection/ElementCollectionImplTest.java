@@ -313,6 +313,23 @@ public class ElementCollectionImplTest {
         verify(two).click();
     }
 
+    public void Has_Class_Should_Return_False_When_Collection_Is_Empty() {
+        assertFalse(emptyElementCollection().hasClass("top"));
+    }
+
+
+    public void Has_Class_Should_Return_False_When_Not_All_Elements_In_A_Collection_Has_The_Css_Class() {
+        Element one = new ElementMockBuilder().withAttribute("class", "left right").build();
+        Element two = new ElementMockBuilder().withAttribute("class", "top left right").build();
+        assertFalse(elementCollection(one, two).hasClass("top"));
+    }
+
+    public void Has_Class_Should_Return_True_When_All_Elements_In_A_Collection_Has_The_Css_Class() {
+        Element one = new ElementMockBuilder().withAttribute("class", "left top").build();
+        Element two = new ElementMockBuilder().withAttribute("class", "top left right").build();
+        assertTrue(elementCollection(one, two).hasClass("top"));
+    }
+
     private ElementMockBuilder optionWithIndex(String index) {
         return new ElementMockBuilder().withTagName("option").withAttribute("index", index);
     }

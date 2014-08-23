@@ -151,4 +151,12 @@ public interface ElementCollection extends ElementCollectionFinder {
      * @since 0.2.0
      */
     boolean hasElements();
+
+    /**
+     * Returns true if the collection is not empty AND if all elements has the specified CSS class.
+     *
+     * @param cssClass CSS class to look for
+     * @return True if the collection is not empty AND if all elements has the specified CSS class.
+     */
+    boolean hasClass(String cssClass);
 }

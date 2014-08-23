@@ -9,6 +9,7 @@ import com.elementcollection.type.TimeUnit;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -182,6 +183,28 @@ class ElementCollectionImpl implements ElementCollection {
     @Override
     public ElementCollection val(int value) {
         return val(String.valueOf(value));
+    }
+
+    @Override
+    public boolean hasClass(String cssClass) {
+        if (isEmpty()) return false;
+
+        for (Element element : elements) {
+            String cssClasses = element.getAttribute("class");
+            if (cssClasses == null || doesNotContainCssClass(cssClasses, cssClass)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean doesNotContainCssClass(String cssClasses, String cssClass) {
+        String[] splitCssClasses = StringUtils.split(cssClasses);
+        for (String splitCssClass : splitCssClasses) {
+            if (StringUtils.trim(splitCssClass).equals(cssClass))
+                return false;
+        }
+        return true;
     }
 
     @Override

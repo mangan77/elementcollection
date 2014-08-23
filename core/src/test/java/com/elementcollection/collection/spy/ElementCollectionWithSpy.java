@@ -104,5 +104,8 @@ public class ElementCollectionWithSpy extends ElementCollectionFinderWithSpy imp
         return castDelegate().valByVisibleText(text);
     }
 
-
+    @Override
+    public boolean hasClass(String cssClass) {
+        return castDelegate().hasClass(cssClass);
+    }
 }
