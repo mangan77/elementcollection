@@ -201,7 +201,7 @@ class ElementCollectionImpl implements ElementCollection {
     private boolean doesNotContainCssClass(String cssClasses, String cssClass) {
         String[] splitCssClasses = StringUtils.split(cssClasses);
         for (String splitCssClass : splitCssClasses) {
-            if (StringUtils.trim(splitCssClass).equals(cssClass))
+            if (StringUtils.trimToEmpty(splitCssClass).equals(cssClass))
                 return false;
         }
         return true;
