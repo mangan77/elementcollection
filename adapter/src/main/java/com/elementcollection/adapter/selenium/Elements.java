@@ -1,8 +1,8 @@
 package com.elementcollection.adapter.selenium;
 
+import com.elementcollection.adapter.util.Function;
+import com.elementcollection.adapter.util.Lists;
 import com.elementcollection.element.Element;
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nullable;
@@ -19,7 +19,7 @@ public class Elements {
     }
 
     public static List<Element> fromWebElements(List<WebElement> elements) {
-        return Lists.transform(elements, new Function<WebElement, Element>() {
+        return Lists.applyFunction(elements, new Function<WebElement, Element>() {
 
             @Nullable
             @Override

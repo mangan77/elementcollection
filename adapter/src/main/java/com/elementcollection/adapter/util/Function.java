@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
  * Date: 11/11/14
  * </pre>
  */
-interface Function<F, T> {
+public interface Function<F, T> {
 
     @Nullable
     T apply(@Nullable F input);
