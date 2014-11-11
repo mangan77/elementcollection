@@ -2,5 +2,8 @@ dependencies {
     compile project(':api')
     compile project(':core')
     compile 'org.seleniumhq.selenium:selenium-java:2.41.0'
-    compile 'com.google.guava:guava:17.0'
+
+    testCompile 'org.testng:testng:6.8.8'
+    testCompile 'org.assertj:assertj-core:1.7.0'
+
 }
