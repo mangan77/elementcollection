@@ -1,6 +1,7 @@
+.git/*
 out/*
 .idea/*
 classes/*
 build/*
 .gradle/*
-releases/.DS_Store
+releases/*
