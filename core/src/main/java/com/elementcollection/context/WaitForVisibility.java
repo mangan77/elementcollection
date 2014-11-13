@@ -4,9 +4,9 @@ import com.elementcollection.element.Element;
 import com.elementcollection.exception.ElementNotVisibleException;
 import com.elementcollection.type.TimeUnit;
 import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 public class WaitForVisibility implements FindContext {
@@ -20,7 +20,7 @@ public class WaitForVisibility implements FindContext {
     @Nonnull
     @Override
     public List<Element> find(String cssSelector, Function<String, List<Element>> findFunction) {
-        List<Element> elements = Lists.newArrayList();
+        List<Element> elements = new ArrayList<>();
         while (shouldTryAgain(endTime)) {
             elements = findFunction.apply(cssSelector);
             if (elements.size() > 0 && allElementsAreVisible(elements)) {

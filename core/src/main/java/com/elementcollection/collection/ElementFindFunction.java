@@ -2,10 +2,10 @@ package com.elementcollection.collection;
 
 import com.elementcollection.element.Element;
 import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +22,7 @@ class ElementFindFunction implements Function<String, List<Element>> {
     @Nullable
     @Override
     public List<Element> apply(@Nullable String input) {
-        List<Element> newList = Lists.newArrayList();
+        List<Element> newList = new ArrayList<>();
         for (Element element : elements) {
             newList.addAll(element.findElements(input));
         }

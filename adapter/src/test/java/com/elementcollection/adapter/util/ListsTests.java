@@ -44,7 +44,7 @@ public class ListsTests {
     }
 
     private static List<String> simpleStringList() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.add("string1");
         list.add("string2");
         list.add("string3");

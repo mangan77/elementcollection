@@ -3,8 +3,8 @@ package com.elementcollection.collection.spy;
 import com.beust.jcommander.internal.Maps;
 import com.elementcollection.collection.ElementCollection;
 import com.elementcollection.finder.ElementCollectionFinder;
-import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +17,7 @@ public class MySpy {
 
     public void put(String method, MethodSpy spy) {
         if (!methodSpies.containsKey(method)) {
-            methodSpies.put(method, Lists.<MethodSpy>newArrayList());
+            methodSpies.put(method, new ArrayList<MethodSpy>());
         }
         methodSpies.get(method).add(spy);
     }

@@ -9,9 +9,9 @@ import java.util.List;
 public class Lists {
     public static <F, T> List<T> applyFunction(List<F> fromList, Function<F, T> function) {
         if (function == null) throw new NullPointerException("Function can not be null");
-        if (fromList == null || fromList.isEmpty()) return new ArrayList<T>();
+        if (fromList == null || fromList.isEmpty()) return new ArrayList<>();
 
-        List<T> toList = new ArrayList<T>(fromList.size());
+        List<T> toList = new ArrayList<>(fromList.size());
         for (F element : fromList) {
             toList.add((function.apply(element)));
         }

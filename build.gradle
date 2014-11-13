@@ -2,7 +2,7 @@ allprojects {
     apply plugin: 'java'
 
     version = "1.0.0-SNAPSHOT"
-    sourceCompatibility = 1.6
+    sourceCompatibility = 1.7
     project.ext.set("title", "elementcollection")
     project.ext.set("vendor", "mangan77")
     project.ext.set("vendorUrl", "https://github.com/mangan77/elementcollection")
