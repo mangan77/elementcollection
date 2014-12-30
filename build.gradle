@@ -29,6 +29,10 @@ subprojects {
         destinationDir = file("../releases/" + version)
     }
 
+    test {
+        useTestNG()
+    }
+
     task javadocJar(type: Jar, dependsOn: javadoc) {
         classifier = 'javadoc'
         from javadoc.destinationDir
