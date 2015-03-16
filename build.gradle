@@ -1,5 +1,7 @@
 allprojects {
     apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'signing'
 
     version = "1.0.0-SNAPSHOT"
     sourceCompatibility = 1.7
@@ -9,7 +11,7 @@ allprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.2.1'
+    gradleVersion = '2.3'
 }
 
 subprojects {
@@ -49,6 +51,11 @@ subprojects {
         from sourceSets.main.allSource
         archiveName = rootProject.name + "-" + archiveName
         destinationDir = file("../releases/" + version)
+    }
+
+    artifacts {
+        archives javadocJar
+        archives sourcesJar
     }
 
 }
