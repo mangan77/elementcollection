@@ -13,6 +13,10 @@ public interface Element {
 
     String getText();
 
+    /**
+     * @param name Attribute name
+     * @return The attribute/property's current value or null if the attribute or value is not set
+     */
     String getAttribute(String name);
 
     boolean isSelected();

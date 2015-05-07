@@ -2,12 +2,17 @@ package com.elementcollection;
 
 import com.elementcollection.element.Element;
 import com.elementcollection.element.SelectElement;
+import com.elementcollection.type.TimeUnit;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
 import java.util.List;
+
+import static com.elementcollection.type.TimeUnits.millis;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * <br> User: Mangan <br> Date: 13/11/13
@@ -18,8 +23,8 @@ public class ElementMockBuilder {
     private final Element mock;
 
     public ElementMockBuilder() {
-        mock = Mockito.mock(Element.class);
-        Mockito.when(mock.asSelect()).thenReturn(new SelectElementMock(mock));
+        mock = mock(Element.class);
+        when(mock.asSelect()).thenReturn(new SelectElementMock(mock));
     }
 
     public Element build() {
@@ -27,28 +32,28 @@ public class ElementMockBuilder {
     }
 
     public ElementMockBuilder withTagName(String tagName) {
-        Mockito.when(mock.getTagName()).thenReturn(tagName);
+        when(mock.getTagName()).thenReturn(tagName);
         return this;
     }
 
     public ElementMockBuilder withAttribute(String attribute, String value) {
-        Mockito.when(mock.getAttribute(attribute)).thenReturn(value);
+        when(mock.getAttribute(attribute)).thenReturn(value);
         return this;
     }
 
     public ElementMockBuilder setSelected(boolean isSelected) {
-        Mockito.when(mock.isSelected()).thenReturn(isSelected);
+        when(mock.isSelected()).thenReturn(isSelected);
         return this;
     }
 
     public ElementMockBuilder isDisplayed(boolean isDisplayed) {
-        Mockito.when(mock.isDisplayed()).thenReturn(isDisplayed);
+        when(mock.isDisplayed()).thenReturn(isDisplayed);
         return this;
     }
 
-    public ElementMockBuilder isDisplayedAfter(int secs) {
-        final long whenToDisplay = System.currentTimeMillis() + secs * 1000;
-        Mockito.when(mock.isDisplayed()).thenAnswer(new Answer<Boolean>() {
+    public ElementMockBuilder isDisplayedAfter(TimeUnit delay) {
+        final long whenToDisplay = System.currentTimeMillis() + delay.inMilliseconds();
+        when(mock.isDisplayed()).thenAnswer(new Answer<Boolean>() {
             @Override
             public Boolean answer(InvocationOnMock invocation) throws Throwable {
                 while (whenToDisplay - System.currentTimeMillis() > 0) {
@@ -60,9 +65,9 @@ public class ElementMockBuilder {
         return this;
     }
 
-    public ElementMockBuilder finds(final List<Element> children, String cssSelector, int afterSecs) {
-        final long whenToFind = System.currentTimeMillis() + afterSecs * 1000;
-        Mockito.when(mock.findElements(cssSelector)).thenAnswer(new Answer<List<Element>>() {
+    public ElementMockBuilder finds(final List<Element> children, String cssSelector, TimeUnit delay) {
+        final long whenToFind = System.currentTimeMillis() + delay.inMilliseconds();
+        when(mock.findElements(cssSelector)).thenAnswer(new Answer<List<Element>>() {
             @Override
             public List<Element> answer(InvocationOnMock invocation) throws Throwable {
                 while (whenToFind - System.currentTimeMillis() > 0) {
@@ -75,12 +80,12 @@ public class ElementMockBuilder {
     }
 
     public ElementMockBuilder withText(String text) {
-        Mockito.when(mock.getText()).thenReturn(text);
+        when(mock.getText()).thenReturn(text);
         return this;
     }
 
     public ElementMockBuilder finds(List<Element> children, String cssSelector) {
-        return finds(children, cssSelector, 0);
+        return finds(children, cssSelector, millis(0));
     }
 
     private class SelectElementMock implements SelectElement {

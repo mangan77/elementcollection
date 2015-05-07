@@ -13,7 +13,7 @@ class SelectByIndex extends SelectFunction {
     }
 
     @Override
-    void doSelect(final SelectElement select) {
+    void doSelect(SelectElement select) {
         select.selectByIndex(index);
     }
 

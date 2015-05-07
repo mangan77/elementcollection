@@ -9,7 +9,9 @@ import com.elementcollection.type.TimeUnit;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -29,13 +31,13 @@ class ElementCollectionImpl implements ElementCollection {
         this.findContext = findContext;
     }
 
-    private ElementCollectionImpl(@Nullable final String selectorString, final Element... elements) {
+    private ElementCollectionImpl(@Nullable String selectorString, Element... elements) {
         this(FindContexts.immediate(), selectorString, Lists.newArrayList(Preconditions.checkNotNull(elements)));
     }
 
     @Override
     public ElementCollection find(String cssSelector) {
-        final List<Element> foundElements = findContext.find(cssSelector, new ElementFindFunction(elements));
+        List<Element> foundElements = findContext.find(cssSelector, new ElementFindFunction(elements));
         return new ElementCollectionImpl(FindContexts.immediate(), cssSelector, foundElements);
     }
 
@@ -58,7 +60,7 @@ class ElementCollectionImpl implements ElementCollection {
     }
 
     @Override
-    public ElementCollection get(final int index) {
+    public ElementCollection get(int index) {
         try {
             return new ElementCollectionImpl(selectorString, elements.get(index));
         } catch (IndexOutOfBoundsException e) {
@@ -87,37 +89,37 @@ class ElementCollectionImpl implements ElementCollection {
     }
 
     @Override
-    public ElementCollection val(final String value) {
-        final List<Element> elementsWithSetValue = SetVal.forValue(value).apply(elements);
+    public ElementCollection val(String value) {
+        List<Element> elementsWithSetValue = SetVal.forValue(value).apply(elements);
         return new ElementCollectionImpl(FindContexts.immediate(), selectorString, elementsWithSetValue);
     }
 
     @Override
-    public ElementCollection valByIndex(final int index) {
-        final List<Element> elementsWithSetValue = SetVal.forIndex(index).apply(elements);
+    public ElementCollection valByIndex(int index) {
+        List<Element> elementsWithSetValue = SetVal.forIndex(index).apply(elements);
         return new ElementCollectionImpl(FindContexts.immediate(), selectorString, elementsWithSetValue);
     }
 
     @Override
-    public ElementCollection valByVisibleText(final String text) {
-        final List<Element> elementsWithSetValue = SetVal.forVisibleValue(text).apply(elements);
+    public ElementCollection valByVisibleText(String text) {
+        List<Element> elementsWithSetValue = SetVal.forVisibleValue(text).apply(elements);
         return new ElementCollectionImpl(FindContexts.immediate(), selectorString, elementsWithSetValue);
     }
 
     @Override
     public String val() {
-        final Element first = Iterables.getFirst(elements, null);
+        Element first = Iterables.getFirst(elements, null);
         return first != null ? first.getText() : null;
     }
 
     @Override
-    public String attr(final String name) {
-        final Element element = Iterables.getFirst(elements, null);
+    public String attr(String name) {
+        Element element = Iterables.getFirst(elements, null);
         return element != null ? element.getAttribute(name) : null;
     }
 
     @Override
-    public ElementCollection val(final boolean value) {
+    public ElementCollection val(boolean value) {
         for (Element element : elements) {
             setValue(element, value);
         }
@@ -179,8 +181,30 @@ class ElementCollectionImpl implements ElementCollection {
     }
 
     @Override
-    public ElementCollection val(final int value) {
+    public ElementCollection val(int value) {
         return val(String.valueOf(value));
+    }
+
+    @Override
+    public boolean hasClass(String cssClass) {
+        if (isEmpty()) return false;
+
+        for (Element element : elements) {
+            String cssClasses = element.getAttribute("class");
+            if (cssClasses == null || doesNotContainCssClass(cssClasses, cssClass)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean doesNotContainCssClass(String cssClasses, String cssClass) {
+        String[] splitCssClasses = StringUtils.split(cssClasses);
+        for (String splitCssClass : splitCssClasses) {
+            if (StringUtils.trimToEmpty(splitCssClass).equals(cssClass))
+                return false;
+        }
+        return true;
     }
 
     @Override
@@ -191,5 +215,11 @@ class ElementCollectionImpl implements ElementCollection {
     @Override
     public ElementCollectionFinder wait(TimeUnit delay) {
         return new ElementCollectionImpl(FindContexts.waiting(delay), selectorString, elements);
+    }
+
+    @Nonnull
+    @Override
+    public ElementCollectionFinder visibleWithin(TimeUnit delay) {
+        return new ElementCollectionImpl(FindContexts.visibility(delay), selectorString, elements);
     }
 }

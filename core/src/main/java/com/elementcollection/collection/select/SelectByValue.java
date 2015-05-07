@@ -14,7 +14,7 @@ class SelectByValue extends SelectFunction {
     }
 
     @Override
-    void doSelect(final SelectElement select) {
+    void doSelect(SelectElement select) {
         select.selectByValue(value);
     }
 }

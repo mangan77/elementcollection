@@ -5,10 +5,11 @@ import com.elementcollection.collection.spy.ElementCollectionWithSpy;
 import com.elementcollection.collection.spy.MySpy;
 import com.elementcollection.context.FindContexts;
 import com.elementcollection.element.Element;
+import com.elementcollection.exception.ElementNotVisibleException;
 import com.google.common.collect.Lists;
 import org.testng.annotations.Test;
 
-import static com.elementcollection.type.TimeUnits.secs;
+import static com.elementcollection.type.TimeUnits.millis;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
@@ -196,25 +197,40 @@ public class ElementCollectionImplTest {
 
     public void Within_Should_Return_Elements_When_They_Get_Found() {
         final Element child = new ElementMockBuilder().finds(Lists.<Element>newArrayList(), "something").build();
-        final Element parent = new ElementMockBuilder().finds(Lists.<Element>newArrayList(child), "something", 2).build();
+        final Element parent = new ElementMockBuilder().finds(Lists.<Element>newArrayList(child), "something", millis(100)).build();
 
-        assertEquals(elementCollection(parent).within(secs(3)).find("something").length(), 1);
+        assertEquals(elementCollection(parent).within(millis(200)).find("something").length(), 1);
     }
 
     public void Within_Should_Return_No_Elements_When_They_Do_Not_Appear_Before_Time_Out() {
         final Element child = new ElementMockBuilder().finds(Lists.<Element>newArrayList(), "something").build();
-        final Element parent = new ElementMockBuilder().finds(Lists.<Element>newArrayList(child), "something", 3).build();
+        final Element parent = new ElementMockBuilder().finds(Lists.<Element>newArrayList(child), "something", millis(300)).build();
 
         ElementCollectionWithSpy elementCollectionWithSpy = elementCollection(parent);
-        assertEquals(elementCollectionWithSpy.within(secs(2)).find("something").length(), 0);
+        assertEquals(elementCollectionWithSpy.within(millis(200)).find("something").length(), 0);
+    }
+
+    public void Visible_Within_Should_Return_Elements_When_They_Get_Visible() {
+        final Element child = new ElementMockBuilder().finds(Lists.<Element>newArrayList(), "something").isDisplayedAfter(millis(100)).build();
+        final Element parent = new ElementMockBuilder().finds(Lists.<Element>newArrayList(child), "something").build();
+
+        assertEquals(elementCollection(parent).visibleWithin(millis(200)).find("something").length(), 1);
+    }
+
+    @Test(expectedExceptions = ElementNotVisibleException.class)
+    public void Visible_Within_Should_Throw_Exception_When_Elements_Never_Get_Visible() {
+        final Element child = new ElementMockBuilder().finds(Lists.<Element>newArrayList(), "something").isDisplayed(false).build();
+        final Element parent = new ElementMockBuilder().finds(Lists.<Element>newArrayList(child), "something").build();
+
+        elementCollection(parent).visibleWithin(millis(100)).find("something");
     }
 
     public void Waiting_Before_Find_Should_Call_Find_Method_After_Wait_Time_And_Not_Before() {
         ElementCollectionWithSpy elementCollection = elementCollection(mock(Element.class));
-        elementCollection.wait(secs(2)).find("something");
+        elementCollection.wait(millis(200)).find("something");
 
         assertEquals(elementCollection.getSpy().get("find").size(), 1);
-        assertTrue(elementCollection.getSpy().get("find").get(0).getDuration() > 1999l, "Duration : " + elementCollection.getSpy().get("find").get(0).getDuration() + " ms");
+        assertTrue(elementCollection.getSpy().get("find").get(0).getDuration() > 199l, "Duration : " + elementCollection.getSpy().get("find").get(0).getDuration() + " ms");
     }
 
     public void Setting_Integer_Value_To_A_Non_Select_Element_Should_Set_Value_To_Integer_Value() {
@@ -295,6 +311,23 @@ public class ElementCollectionImplTest {
         elementCollection(select).valByVisibleText("text");
         verify(one).click();
         verify(two).click();
+    }
+
+    public void Has_Class_Should_Return_False_When_Collection_Is_Empty() {
+        assertFalse(emptyElementCollection().hasClass("top"));
+    }
+
+
+    public void Has_Class_Should_Return_False_When_Not_All_Elements_In_A_Collection_Has_The_Css_Class() {
+        Element one = new ElementMockBuilder().withAttribute("class", "left right").build();
+        Element two = new ElementMockBuilder().withAttribute("class", "top left right").build();
+        assertFalse(elementCollection(one, two).hasClass("top"));
+    }
+
+    public void Has_Class_Should_Return_True_When_All_Elements_In_A_Collection_Has_The_Css_Class() {
+        Element one = new ElementMockBuilder().withAttribute("class", "left top").build();
+        Element two = new ElementMockBuilder().withAttribute("class", "top left right").build();
+        assertTrue(elementCollection(one, two).hasClass("top"));
     }
 
     private ElementMockBuilder optionWithIndex(String index) {

@@ -28,4 +28,8 @@ public final class FindContexts {
     public static FindContext waiting(TimeUnit delay) {
         return new WaitToFind(delay);
     }
+
+    public static FindContext visibility(TimeUnit delay) {
+        return new WaitForVisibility(delay);
+    }
 }

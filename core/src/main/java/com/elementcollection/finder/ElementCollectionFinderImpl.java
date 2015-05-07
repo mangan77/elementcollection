@@ -9,6 +9,7 @@ import com.elementcollection.element.Element;
 import com.elementcollection.type.TimeUnit;
 import com.google.common.base.Preconditions;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
@@ -49,4 +50,9 @@ class ElementCollectionFinderImpl implements ElementCollectionFinder {
         return new ElementCollectionFinderImpl(driver, FindContexts.waiting(delay));
     }
 
+    @Nonnull
+    @Override
+    public ElementCollectionFinder visibleWithin(TimeUnit delay) {
+        return new ElementCollectionFinderImpl(driver, FindContexts.visibility(delay));
+    }
 }

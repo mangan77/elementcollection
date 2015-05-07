@@ -1,11 +1,17 @@
 allprojects {
     apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'signing'
 
-    version = "0.2.1"
-    sourceCompatibility = 1.6
+    version = "1.0.0-SNAPSHOT"
+    sourceCompatibility = 1.7
     project.ext.set("title", "elementcollection")
     project.ext.set("vendor", "mangan77")
     project.ext.set("vendorUrl", "https://github.com/mangan77/elementcollection")
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
 }
 
 subprojects {
@@ -29,6 +35,10 @@ subprojects {
         destinationDir = file("../releases/" + version)
     }
 
+    test {
+        useTestNG()
+    }
+
     task javadocJar(type: Jar, dependsOn: javadoc) {
         classifier = 'javadoc'
         from javadoc.destinationDir
@@ -41,6 +51,11 @@ subprojects {
         from sourceSets.main.allSource
         archiveName = rootProject.name + "-" + archiveName
         destinationDir = file("../releases/" + version)
+    }
+
+    artifacts {
+        archives javadocJar
+        archives sourcesJar
     }
 
 }
