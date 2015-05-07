@@ -30,7 +30,7 @@ public interface ElementCollectionFinder {
      *
      * @param delay Time period length
      * @return A new {@code ElementCollectionFinder}
-     * @throws java.lang.RuntimeException if a timeout occurs and an exception was thrown by {@see ElementCollectionFinder#find}
+     * @throws java.lang.RuntimeException if a timeout occurs and an exception was thrown by {@code ElementCollectionFinder#find}
      */
     @Nonnull
     ElementCollectionFinder within(TimeUnit delay);
