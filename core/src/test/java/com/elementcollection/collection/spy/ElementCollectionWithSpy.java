@@ -85,6 +85,11 @@ public class ElementCollectionWithSpy extends ElementCollectionFinderWithSpy imp
     }
 
     @Override
+    public boolean isNotEmpty() {
+        return castDelegate().isNotEmpty();
+    }
+
+    @Override
     public boolean hasElements() {
         return castDelegate().hasElements();
     }

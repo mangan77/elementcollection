@@ -148,8 +148,18 @@ public interface ElementCollection extends ElementCollectionFinder {
      * True if collection has at least one element
      *
      * @return True if collection has at least one element, false if it's empty
-     * @since 0.2.0
+     * @since 1.0.0
      */
+    boolean isNotEmpty();
+
+    /**
+     * True if collection has at least one element
+     *
+     * @return True if collection has at least one element, false if it's empty
+     * @since 0.2.0
+     * @deprecated Use {@code isNotEmpty} instead.
+     */
+    @Deprecated
     boolean hasElements();
 
     /**

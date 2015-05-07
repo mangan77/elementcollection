@@ -176,6 +176,11 @@ class ElementCollectionImpl implements ElementCollection {
     }
 
     @Override
+    public boolean isNotEmpty() {
+        return length() > 0;
+    }
+
+    @Override
     public boolean hasElements() {
         return length() > 0;
     }
