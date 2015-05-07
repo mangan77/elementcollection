@@ -1,20 +1,21 @@
 allprojects {
-    apply plugin: 'java'
-    apply plugin: 'maven'
-    apply plugin: 'signing'
 
-    version = "1.0.0-SNAPSHOT"
-    sourceCompatibility = 1.7
+    version = "1.0.0"
     project.ext.set("title", "elementcollection")
     project.ext.set("vendor", "mangan77")
     project.ext.set("vendorUrl", "https://github.com/mangan77/elementcollection")
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
+    gradleVersion = '2.4'
 }
 
 subprojects {
+
+    apply plugin: 'java'
+
+    sourceCompatibility = 1.7
+
     repositories {
         mavenCentral();
     }
