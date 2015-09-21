@@ -1,9 +1,0 @@
-dependencies {
-    compile project(':core')
-    compile 'com.google.code.findbugs:jsr305:3.0.0'
-    compile 'org.seleniumhq.selenium:selenium-java:2.45.0'
-
-    testCompile 'org.testng:testng:6.8.21'
-    testCompile 'org.assertj:assertj-core:2.0.0'
-
-}
