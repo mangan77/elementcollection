@@ -4,6 +4,9 @@ allprojects {
     project.ext.set("title", "elementcollection")
     project.ext.set("vendor", "mangan77")
     project.ext.set("vendorUrl", "https://github.com/mangan77/elementcollection")
+
+    apply plugin: 'idea'
+
 }
 
 task wrapper(type: Wrapper) {
