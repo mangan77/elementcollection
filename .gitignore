@@ -1,9 +1,5 @@
-.git/*
-out/*
-.idea/*
-classes/*
-build/*
+.idea/
 .gradle/*
-releases/*
 elementcollection.iml
 .DS_Store
+build/
