@@ -1,14 +1,19 @@
 package com.elementcollection.finder;
 
-import com.elementcollection.api.*;
-import com.elementcollection.collection.ElementCollections;
-import com.elementcollection.context.FindContext;
-import com.elementcollection.context.FindContexts;
-import com.google.common.base.Preconditions;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
+
+import com.elementcollection.api.Driver;
+import com.elementcollection.api.Element;
+import com.elementcollection.api.ElementCollection;
+import com.elementcollection.api.ElementCollectionFinder;
+import com.elementcollection.api.TimeUnit;
+import com.elementcollection.collection.ElementCollections;
+import com.elementcollection.context.FindContext;
+import com.elementcollection.context.FindContexts;
+import com.elementcollection.util.Checks;
 
 /**
  * <br> User: Mangan <br> Date: 09/12/13
@@ -34,7 +39,7 @@ class ElementCollectionFinderImpl implements ElementCollectionFinder {
     }
 
     private List<Element> findElements(String cssSelector) {
-        return findContext.find(Preconditions.checkNotNull(cssSelector), new DriverFindFunction(driver));
+        return findContext.find(Checks.checkNotNull(cssSelector), new DriverFindFunction(driver));
     }
 
     @Override

@@ -1,17 +1,18 @@
 package com.elementcollection.finder;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.testng.annotations.Test;
+
 import com.elementcollection.ElementMockBuilder;
 import com.elementcollection.api.Driver;
 import com.elementcollection.api.Element;
 import com.elementcollection.api.ElementCollection;
 import com.elementcollection.exception.ElementNotVisibleException;
-import com.google.common.collect.Lists;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.testng.annotations.Test;
-
-import java.util.Collections;
-import java.util.List;
+import com.elementcollection.util.Lists;
 
 import static com.elementcollection.type.TimeUnits.millis;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -52,7 +53,7 @@ public class ElementCollectionFinderImplTest {
         final Element elementTwo = new ElementMockBuilder().build();
         final Driver driver =
                 driverThatAnswers(delayedAnswer(getReturnTime(500),
-                        Lists.newArrayList(elementOne, elementTwo)));
+                                                Lists.newList(elementOne, elementTwo)));
 
         ElementCollection elements = ElementCollectionFinders.create(driver).within(millis(550)).find("someCssSelector");
         assertThat(elements.length(), is(2));
@@ -71,7 +72,7 @@ public class ElementCollectionFinderImplTest {
                     count++;
                     throw new NoSuchElementException("test");
                 }
-                return Lists.newArrayList(elementOne, elementTwo);
+                return Lists.newList(elementOne, elementTwo);
             }
         };
 
@@ -155,7 +156,7 @@ public class ElementCollectionFinderImplTest {
         return new Answer<List<Element>>() {
             @Override
             public List<Element> answer(InvocationOnMock invocation) throws Throwable {
-                return Lists.newArrayList(elements);
+                return Lists.newList(elements);
             }
         };
     }

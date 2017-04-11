@@ -1,12 +1,13 @@
 package com.elementcollection.context;
 
-import com.elementcollection.api.Element;
-import com.elementcollection.api.TimeOut;
-import com.google.common.base.Function;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
+
+import com.elementcollection.api.Element;
+import com.elementcollection.api.TimeOut;
+import com.elementcollection.util.Function;
 
 /**
  * <br> User: Mangan <br> Date: 08/05/15

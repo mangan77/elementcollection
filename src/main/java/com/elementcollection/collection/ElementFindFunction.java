@@ -1,12 +1,13 @@
 package com.elementcollection.collection;
 
-import com.elementcollection.api.Element;
-import com.google.common.base.Function;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
-import java.util.List;
+
+import com.elementcollection.api.Element;
+import com.elementcollection.util.Function;
 
 /**
  * <br> User: Mangan <br> Date: 09/12/13

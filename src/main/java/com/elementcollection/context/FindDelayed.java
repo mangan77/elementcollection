@@ -1,12 +1,13 @@
 package com.elementcollection.context;
 
-import com.elementcollection.api.Element;
-import com.elementcollection.api.TimeUnit;
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
+
+import com.elementcollection.api.Element;
+import com.elementcollection.api.TimeUnit;
+import com.elementcollection.util.Function;
+import com.elementcollection.util.Lists;
 
 /**
  * <br> User: Mangan <br> Date: 09/12/13
@@ -35,7 +36,7 @@ class FindDelayed implements FindContext {
             }
         }
         if (thrownException != null) throw thrownException;
-        return Lists.newArrayList();
+        return Lists.newList();
     }
 
     private long calculateEndTime(TimeUnit delay) {

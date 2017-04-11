@@ -1,5 +1,13 @@
 package com.elementcollection.collection;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.elementcollection.api.Element;
 import com.elementcollection.api.ElementCollection;
 import com.elementcollection.api.ElementCollectionFinder;
@@ -7,17 +15,12 @@ import com.elementcollection.api.TimeUnit;
 import com.elementcollection.collection.select.SetVal;
 import com.elementcollection.context.FindContext;
 import com.elementcollection.context.FindContexts;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import org.apache.commons.lang3.StringUtils;
+import com.elementcollection.util.Checks;
+import com.elementcollection.util.Lists;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
-
-import static com.elementcollection.util.ElementUtil.*;
+import static com.elementcollection.util.ElementUtil.isCheckbox;
+import static com.elementcollection.util.ElementUtil.isRadioButton;
+import static com.elementcollection.util.ElementUtil.isSelectOption;
 
 @ParametersAreNonnullByDefault
 class ElementCollectionImpl implements ElementCollection {
@@ -27,13 +30,13 @@ class ElementCollectionImpl implements ElementCollection {
     private FindContext findContext;
 
     ElementCollectionImpl(FindContext findContext, @Nullable String selectorString, List<Element> elements) {
-        this.elements = Preconditions.checkNotNull(elements, "elements");
+        this.elements = Checks.checkNotNull(elements, "elements");
         this.selectorString = selectorString;
         this.findContext = findContext;
     }
 
     private ElementCollectionImpl(@Nullable String selectorString, Element... elements) {
-        this(FindContexts.immediate(), selectorString, Lists.newArrayList(Preconditions.checkNotNull(elements)));
+        this(FindContexts.immediate(), selectorString, Lists.newList(Checks.checkNotNull(elements)));
     }
 
     @Override
@@ -44,7 +47,7 @@ class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public ElementCollection click() {
-        Preconditions.checkState(!elements.isEmpty(), "Trying to click on non existing element.");
+        Checks.checkState(!elements.isEmpty(), "Trying to click on non existing element.");
         for (Element element : elements) {
             element.click();
         }
@@ -53,7 +56,7 @@ class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public ElementCollection submit() {
-        Preconditions.checkState(!elements.isEmpty(), "Trying to submit a non existing element.");
+        Checks.checkState(!elements.isEmpty(), "Trying to submit a non existing element.");
         for (Element element : elements) {
             element.submit();
         }
@@ -72,8 +75,8 @@ class ElementCollectionImpl implements ElementCollection {
     @Override
     public ElementCollection first() {
         try {
-            Preconditions.checkArgument(elements.size() > 0);
-            return new ElementCollectionImpl(selectorString, Iterables.getFirst(elements, null));
+            Checks.checkArgument(elements.size() > 0);
+            return new ElementCollectionImpl(selectorString, Lists.getFirst(elements));
         } catch (IllegalArgumentException e) {
             throw new IllegalStateException("Element collection is empty", e);
         }
@@ -82,8 +85,8 @@ class ElementCollectionImpl implements ElementCollection {
     @Override
     public ElementCollection last() {
         try {
-            Preconditions.checkArgument(elements.size() > 0);
-            return new ElementCollectionImpl(selectorString, Iterables.getLast(elements));
+            Checks.checkArgument(elements.size() > 0);
+            return new ElementCollectionImpl(selectorString, Lists.getLast(elements));
         } catch (IllegalArgumentException e) {
             throw new IllegalStateException("Element collection is empty", e);
         }
@@ -109,13 +112,13 @@ class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public String val() {
-        Element first = Iterables.getFirst(elements, null);
+        Element first = Lists.getFirst(elements);
         return first != null ? first.getText() : null;
     }
 
     @Override
     public String attr(String name) {
-        Element element = Iterables.getFirst(elements, null);
+        Element element = Lists.getFirst(elements);
         return element != null ? element.getAttribute(name) : null;
     }
 
@@ -128,8 +131,8 @@ class ElementCollectionImpl implements ElementCollection {
     }
 
     private void setValue(Element element, boolean value) {
-        Preconditions.checkArgument(isCheckbox(element) || isRadioButton(element) || isSelectOption(element),
-                "Boolean values can only be set to checkboxes, radio buttons and select options");
+        Checks.checkArgument(isCheckbox(element) || isRadioButton(element) || isSelectOption(element),
+                             "Boolean values can only be set to checkboxes, radio buttons and select options");
 
         if (isSelectedButShouldBeDeselected(element, value) || isNotSelectedButShouldBeSelected(element, value)) {
             element.click();
@@ -146,9 +149,9 @@ class ElementCollectionImpl implements ElementCollection {
 
     @Override
     public List<ElementCollection> getElements() {
-        List<ElementCollection> elements = Lists.newArrayList();
+        List<ElementCollection> elements = Lists.newList();
         for (Element element : this.elements) {
-            elements.add(new ElementCollectionImpl(FindContexts.immediate(), selectorString, Lists.newArrayList(element)));
+            elements.add(new ElementCollectionImpl(FindContexts.immediate(), selectorString, Lists.newList(element)));
         }
         return elements;
     }

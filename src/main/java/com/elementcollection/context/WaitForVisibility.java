@@ -1,13 +1,14 @@
 package com.elementcollection.context;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import com.elementcollection.api.Element;
 import com.elementcollection.api.TimeUnit;
 import com.elementcollection.exception.ElementNotVisibleException;
-import com.google.common.base.Function;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
+import com.elementcollection.util.Function;
 
 public class WaitForVisibility implements FindContext {
 

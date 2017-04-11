@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mangan77/elementcollection.svg?branch=master)](https://travis-ci.org/mangan77/elementcollection)
+
 elementcollection
 =================
 ElementCollection is a JQuery inspired framework for working with Selenium. It is heavily dependent on CSS selectors.

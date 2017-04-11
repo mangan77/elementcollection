@@ -3,7 +3,8 @@ package com.elementcollection.context;
 import com.elementcollection.ElementMockBuilder;
 import com.elementcollection.api.Element;
 import com.elementcollection.api.TimeOut;
-import com.google.common.base.Function;
+import com.elementcollection.util.Function;
+
 import org.testng.annotations.Test;
 
 import javax.annotation.Nullable;

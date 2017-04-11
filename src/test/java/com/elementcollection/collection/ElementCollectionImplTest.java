@@ -1,5 +1,7 @@
 package com.elementcollection.collection;
 
+import org.testng.annotations.Test;
+
 import com.elementcollection.ElementMockBuilder;
 import com.elementcollection.api.Element;
 import com.elementcollection.api.ElementCollection;
@@ -7,12 +9,18 @@ import com.elementcollection.collection.spy.ElementCollectionWithSpy;
 import com.elementcollection.collection.spy.MySpy;
 import com.elementcollection.context.FindContexts;
 import com.elementcollection.exception.ElementNotVisibleException;
-import com.google.common.collect.Lists;
-import org.testng.annotations.Test;
+import com.elementcollection.util.Lists;
 
 import static com.elementcollection.type.TimeUnits.millis;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 /**
  * <br> User: Mangan <br> Date: 31/10/13
@@ -180,48 +188,48 @@ public class ElementCollectionImplTest {
     }
 
     public void Find_When_No_Elements_Can_Be_Found_Should_Return_Empty_Collection() {
-        final Element one = new ElementMockBuilder().finds(Lists.<Element>newArrayList(), "something").build();
-        final Element two = new ElementMockBuilder().finds(Lists.<Element>newArrayList(), "something").build();
-        final Element three = new ElementMockBuilder().finds(Lists.<Element>newArrayList(), "something").build();
+        final Element one = new ElementMockBuilder().finds(Lists.<Element>newList(), "something").build();
+        final Element two = new ElementMockBuilder().finds(Lists.<Element>newList(), "something").build();
+        final Element three = new ElementMockBuilder().finds(Lists.<Element>newList(), "something").build();
 
         assertEquals(elementCollection(one, two, three).find("something").length(), 0);
     }
 
     public void Find_Elements_Should_Return_All_Found_Elements() {
-        final Element one_a = new ElementMockBuilder().finds(Lists.<Element>newArrayList(), "something").build();
-        final Element one = new ElementMockBuilder().finds(Lists.newArrayList(one_a), "something").build();
-        final Element two = new ElementMockBuilder().finds(Lists.<Element>newArrayList(), "something").build();
-        final Element three = new ElementMockBuilder().finds(Lists.<Element>newArrayList(), "something").build();
+        final Element one_a = new ElementMockBuilder().finds(Lists.<Element>newList(), "something").build();
+        final Element one = new ElementMockBuilder().finds(Lists.newList(one_a), "something").build();
+        final Element two = new ElementMockBuilder().finds(Lists.<Element>newList(), "something").build();
+        final Element three = new ElementMockBuilder().finds(Lists.<Element>newList(), "something").build();
 
         assertEquals(elementCollection(one, two, three).find("something").length(), 1);
     }
 
     public void Within_Should_Return_Elements_When_They_Get_Found() {
-        final Element child = new ElementMockBuilder().finds(Lists.<Element>newArrayList(), "something").build();
-        final Element parent = new ElementMockBuilder().finds(Lists.<Element>newArrayList(child), "something", millis(100)).build();
+        final Element child = new ElementMockBuilder().finds(Lists.<Element>newList(), "something").build();
+        final Element parent = new ElementMockBuilder().finds(Lists.<Element>newList(child), "something", millis(100)).build();
 
         assertEquals(elementCollection(parent).within(millis(200)).find("something").length(), 1);
     }
 
     public void Within_Should_Return_No_Elements_When_They_Do_Not_Appear_Before_Time_Out() {
-        final Element child = new ElementMockBuilder().finds(Lists.<Element>newArrayList(), "something").build();
-        final Element parent = new ElementMockBuilder().finds(Lists.<Element>newArrayList(child), "something", millis(300)).build();
+        final Element child = new ElementMockBuilder().finds(Lists.<Element>newList(), "something").build();
+        final Element parent = new ElementMockBuilder().finds(Lists.<Element>newList(child), "something", millis(300)).build();
 
         ElementCollectionWithSpy elementCollectionWithSpy = elementCollection(parent);
         assertEquals(elementCollectionWithSpy.within(millis(200)).find("something").length(), 0);
     }
 
     public void Visible_Within_Should_Return_Elements_When_They_Get_Visible() {
-        final Element child = new ElementMockBuilder().finds(Lists.<Element>newArrayList(), "something").isDisplayedAfter(millis(100)).build();
-        final Element parent = new ElementMockBuilder().finds(Lists.<Element>newArrayList(child), "something").build();
+        final Element child = new ElementMockBuilder().finds(Lists.<Element>newList(), "something").isDisplayedAfter(millis(100)).build();
+        final Element parent = new ElementMockBuilder().finds(Lists.<Element>newList(child), "something").build();
 
         assertEquals(elementCollection(parent).visibleWithin(millis(200)).find("something").length(), 1);
     }
 
     @Test(expectedExceptions = ElementNotVisibleException.class)
     public void Visible_Within_Should_Throw_Exception_When_Elements_Never_Get_Visible() {
-        final Element child = new ElementMockBuilder().finds(Lists.<Element>newArrayList(), "something").isDisplayed(false).build();
-        final Element parent = new ElementMockBuilder().finds(Lists.<Element>newArrayList(child), "something").build();
+        final Element child = new ElementMockBuilder().finds(Lists.<Element>newList(), "something").isDisplayed(false).build();
+        final Element parent = new ElementMockBuilder().finds(Lists.<Element>newList(child), "something").build();
 
         elementCollection(parent).visibleWithin(millis(100)).find("something");
     }
@@ -346,14 +354,14 @@ public class ElementCollectionImplTest {
     private Element singleSelect(Element... elements) {
         return new ElementMockBuilder()
                 .withTagName("select")
-                .finds(Lists.newArrayList(elements), "option")
+                .finds(Lists.newList(elements), "option")
                 .build();
     }
 
     private Element multiSelect(Element... elements) {
         return new ElementMockBuilder()
                 .withTagName("select")
-                .finds(Lists.newArrayList(elements), "option")
+                .finds(Lists.newList(elements), "option")
                 .withAttribute("multiple", "true")
                 .build();
     }
@@ -409,7 +417,7 @@ public class ElementCollectionImplTest {
     }
 
     private ElementCollectionWithSpy elementCollection(Element... elements) {
-        return new ElementCollectionWithSpy(new ElementCollectionImpl(FindContexts.immediate(), null, Lists.newArrayList(elements)), new MySpy());
+        return new ElementCollectionWithSpy(new ElementCollectionImpl(FindContexts.immediate(), null, Lists.newList(elements)), new MySpy());
     }
 
 }

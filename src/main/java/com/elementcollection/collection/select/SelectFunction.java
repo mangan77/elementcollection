@@ -1,10 +1,10 @@
 package com.elementcollection.collection.select;
 
+import javax.annotation.Nullable;
+
 import com.elementcollection.api.Element;
 import com.elementcollection.api.SelectElement;
-import com.google.common.base.Function;
-
-import javax.annotation.Nullable;
+import com.elementcollection.util.Function;
 
 /**
  * <pre>

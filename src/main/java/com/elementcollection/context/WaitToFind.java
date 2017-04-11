@@ -1,10 +1,10 @@
 package com.elementcollection.context;
 
+import java.util.List;
+
 import com.elementcollection.api.Element;
 import com.elementcollection.api.TimeUnit;
-import com.google.common.base.Function;
-
-import java.util.List;
+import com.elementcollection.util.Function;
 
 public class WaitToFind implements FindContext {
     private final TimeUnit delay;

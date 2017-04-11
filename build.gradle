@@ -41,7 +41,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 dependencies {
     compile 'com.google.code.findbugs:jsr305:3.0.0'
-    compile 'com.google.guava:guava:18.0'
     compile 'org.apache.commons:commons-lang3:3.4'
 
     testCompile 'org.testng:testng:6.8.21'
