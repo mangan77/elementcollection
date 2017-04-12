@@ -6,8 +6,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.elementcollection.api.Element;
 import com.elementcollection.api.ElementCollection;
 import com.elementcollection.api.ElementCollectionFinder;
@@ -17,6 +15,7 @@ import com.elementcollection.context.FindContext;
 import com.elementcollection.context.FindContexts;
 import com.elementcollection.util.Checks;
 import com.elementcollection.util.Lists;
+import com.elementcollection.util.Strings;
 
 import static com.elementcollection.util.ElementUtil.isCheckbox;
 import static com.elementcollection.util.ElementUtil.isRadioButton;
@@ -208,9 +207,9 @@ class ElementCollectionImpl implements ElementCollection {
     }
 
     private boolean doesNotContainCssClass(String cssClasses, String cssClass) {
-        String[] splitCssClasses = StringUtils.split(cssClasses);
+        String[] splitCssClasses = Strings.split(cssClasses);
         for (String splitCssClass : splitCssClasses) {
-            if (StringUtils.trimToEmpty(splitCssClass).equals(cssClass))
+            if (Strings.trimToEmpty(splitCssClass).equals(cssClass))
                 return false;
         }
         return true;
